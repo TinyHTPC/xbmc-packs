@@ -1,0 +1,17 @@
+name="Internet Streaming"
+url="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/streaming.zip"
+img="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/streaming.png"
+fanart=""
+description="This Package contains various addons for streaming media content."
+
+name="Internet PVR"
+url="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/ipvr.zip"
+img="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/ipvr.png"
+fanart=""
+description="This Package contains addons for automatically downloading media through torrents."
+
+name="Give me everything!"
+url="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/all.zip"
+img="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/all.png"
+fanart=""
+description="Installs and optimises everything for your TinyHTPC."
