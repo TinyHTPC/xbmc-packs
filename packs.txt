@@ -1,5 +1,5 @@
 name="Internet Streaming"
-url="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/streaming.zip"
+url="https://xbmc-packs.googlecode.com/git/streaming.zip"
 img="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/streaming.png"
 fanart="https://github.com/j1nx/TLBB_Wizard/raw/master/packs/fanart.jpg"
 description="This Package contains various add-ons for streaming media content from the internet.[CR]
