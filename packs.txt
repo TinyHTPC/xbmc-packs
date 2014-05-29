@@ -1,7 +1,14 @@
 name="Internet Streaming 29/05/2014"
-url="https://www.dropbox.com/s/xxzu9xmkjtd76dq/streaming.zip?dl=1"
-img="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/streaming.png"
-fanart="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/fanart.jpg"
+url="https://www.dropbox.com/s/qrc50xryopnjmpf/streaming.zip?dl=1"
+img="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/streaming/streaming.png"
+fanart="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/streaming/fanart.jpg"
 description="This Package contains various add-ons for streaming media content from the internet.[CR]
+WARNING: Some add-ons contain content that may not be legal in your country! TinyHTPC accepts no responsibility for what you do with them."
+
+name="Torrents 29/05/2014"
+url="https://www.dropbox.com/s/k9q0u0rbaaokki7/Bit-Torrent.zip?dl=1"
+img="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/Bit-Torrent/torrents.png"
+fanart="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/Bit-Torrent/fanart.jpg"
+description="Torrent related add-ons setup for automatic downloading of Movies, TV Shows and Music.[CR]
 WARNING: Some add-ons contain content that may not be legal in your country! TinyHTPC accepts no responsibility for what you do with them."
 
