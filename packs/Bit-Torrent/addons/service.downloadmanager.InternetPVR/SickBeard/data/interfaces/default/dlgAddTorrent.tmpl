@@ -1,0 +1,35 @@
+<div id="divAddTorrent">
+<label for="torr_url">URL to torrent file or magnet link <strong>(http(s) or magnet only)</strong>:</label>
+<input type="text" size="60" name="torr_url" id="torr_url" value="" />
+</div>
+<script>
+function doAddTorrent(dlg) {
+	var torr_url = \$('#torr_url').val();
+	if (torr_url && \$.trim(torr_url) != '') {
+		if (torr_url.match("^http://") || 
+			torr_url.match("^https://") || 
+			torr_url.match("^magnet:"))
+		{
+			\$.ajax({ 
+					url: '$sbRoot/downloads/addTorrentByUrl',
+					data: { url: torr_url }
+			}).done(function (data) {
+				console.log(data);
+				if (!data.success) {
+					alert(data.errorMessage);
+				} else {
+					\$(dlg).dialog('close');
+				}
+			});
+		}
+		else
+		{
+			alert('Only http, http(s), or magnet links are accepted.');
+			\$('#torr_url').focus();
+		}
+	} else {
+		alert('Please enter a url.');
+		\$('#torr_url').focus();
+	}
+}
+</script>

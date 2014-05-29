@@ -1,0 +1,47 @@
+#import sickbeard
+#import datetime
+#from sickbeard import downloader
+#set global $title="Downloads"
+
+#set global $sbPath=".."
+
+#set global $topmenu="downloads"#
+#include $os.path.join($sickbeard.PROG_DIR, "data/interfaces/default/inc_top.tmpl")
+
+<script type="text/javascript" src="$sbRoot/js/downloads.js?$sbPID"></script>
+<script type="text/javascript">
+<!--
+/*\$(document).ready(function() 
+{ 
+    \$("#downloadsTable:has(tbody tr)").tablesorter({
+        widgets: ['zebra', 'stickyHeaders', 'filter'],
+        sortList: [[0,1]],
+        textExtraction: {
+            4: function(node) { return \$(node).find("span").text().toLowerCase(); }
+        }
+    });
+});*/
+//-->
+</script>
+
+<div class="h2footer align-right">
+    <input type="button" name="btnAddTorrent" id="btnAddTorrent" class="btn"
+    	onclick="addTorrent()" value="Add Torrent..." />
+</div><br/>
+
+<table id="downloadsTable" class="tablesorter" cellspacing="1" border="0" cellpadding="0">
+  <thead>
+  <tr>
+  	<th></th>
+  	<th>Name</th>
+  	<th>Status</th>
+  	<th>Size</th>
+  	<th>Progress</th>
+  	<th>Ratio</th>
+  	<th>Speeds</th>
+  </tr></thead>
+  <tbody id="downloadsTableBody">
+  </tbody>
+</table>
+
+#include $os.path.join($sickbeard.PROG_DIR, "data/interfaces/default/inc_bottom.tmpl")

@@ -1,0 +1,209 @@
+<%inherit file="base.html" />
+<%!
+	from headphones import db, helpers
+	myDB = db.DBConnection()
+%>
+
+<%def name="headerIncludes()">
+	<div id="subhead_container">
+		<div id="subhead_menu">
+			<a id="menu_link_delete" href="deleteAlbum?AlbumID=${album['AlbumID']}&ArtistID=${album['ArtistID']}">Delete Album</a>
+			%if album['Status'] == 'Skipped':
+			<a id="menu_link_wanted" href="#" onclick="doAjaxCall('queueAlbum?AlbumID=${album['AlbumID']}&ArtistID=${album['ArtistID']}&new=False', $(this),true)" data-success="'${album['AlbumTitle']}' added to queue">Mark Album as Wanted</a>
+			%elif album['Status'] == 'Wanted':
+			<a id="menu_link_check" href="#" onclick="doAjaxCall('queueAlbum?AlbumID=${album['AlbumID']}&ArtistID=${album['ArtistID']}&new=True', $(this));" data-success="Forced checking successful">Force Check</a>
+			<a id="menu_link_skipped" href="#" onclick="doAjaxCall('unqueueAlbum?AlbumID=${album['AlbumID']}&ArtistID=${album['ArtistID']}', $(this),true);" data-success="'${album['AlbumTitle']}' marked as Skipped">Mark Album as Skipped</a>
+			%else:
+			<a id="menu_link_retry" href="#" onclick="doAjaxCall('queueAlbum?AlbumID=${album['AlbumID']}&ArtistID=${album['ArtistID']}&new=False', $(this),true);" data-success="Retrying the same version of '${album['AlbumTitle']}'">Retry Download</a>
+			<a id="menu_link_new" href="#" onclick="doAjaxCall('queueAlbum?AlbumID=${album['AlbumID']}&ArtistID=${album['ArtistID']}&new=True', $(this),true);" data-success="Looking for a new version of '${album['AlbumTitle']}'">Try New Version</a>
+			%endif		
+			<a class="menu_link_edit" id="album_chooser" href="#">Choose Alternate Release</a>
+				<div id="dialog" title="Choose an Alternate Release" style="display:none" class="configtable">
+					<div class="links">
+						<%
+							alternate_albums = myDB.select("SELECT * from allalbums WHERE AlbumID=? ORDER BY ReleaseDate ASC", [album['AlbumID']])
+						%>
+						%if not alternate_albums:
+							<p>No alternate releases found. Try refreshing the artist (if the artist is being refreshed, please wait until it's finished)</p>
+							<h2><a id="refresh_artist" onclick="doAjaxCall('refreshArtist?ArtistID=${album['ArtistID']}', $(this)), true" href="#" data-success="'${album['ArtistName']}' is being refreshed">Refresh Artist</a></h2>
+						%else:
+							%for alternate_album in alternate_albums:
+								<%
+									track_count = len(myDB.select("SELECT * from alltracks WHERE ReleaseID=?", [alternate_album['ReleaseID']]))
+									have_track_count = len(myDB.select("SELECT * from alltracks WHERE ReleaseID=? AND Location IS NOT NULL", [alternate_album['ReleaseID']]))
+									if alternate_album['AlbumID'] == alternate_album['ReleaseID']:
+										alternate_album_name = "Headphones Default Release (" + str(alternate_album['ReleaseDate']) + ") [" + str(have_track_count) + "/" + str(track_count) + " tracks]"
+									else:
+										alternate_album_name = alternate_album['AlbumTitle'] + " (" + alternate_album['ReleaseCountry'] + ", " + str(alternate_album['ReleaseDate']) + ", " + alternate_album['ReleaseFormat'] + ") [" + str(have_track_count) + "/" + str(track_count) + " tracks]"
+									
+								%>
+								<a href="#" onclick="doAjaxCall('switchAlbum?AlbumID=${album['AlbumID']}&ReleaseID=${alternate_album['ReleaseID']}', $(this), 'table');" data-success="Switched release to: ${alternate_album_name}">${alternate_album_name}</a><br>
+							%endfor
+						%endif
+					</div>
+				</div>
+			<a class="menu_link_edit" id="edit_search_term" href="#">Edit Search Term</a>
+				<div id="dialog2" title="Enter your own search term for this album" style="display:none" class="configtable">
+					<form action="editSearchTerm" method="GET" id="editSearchTerm">
+						<input type="hidden" name="AlbumID" value="${album['AlbumID']}">
+						<div class="row">
+							<%
+								if not album['SearchTerm']:
+									search_term = ""
+								else:
+									search_term = album['SearchTerm']
+								
+							%>
+							<input type="text" value="${search_term}" name="SearchTerm" size="40" />
+						</div>
+						<input type="button" value="Save changes" onclick="doAjaxCall('editSearchTerm',$(this),'tabs',true);return false;" data-success="Search term updated"/>
+					</form>
+				</div>	
+		</div>
+	</div>	
+	<a href="artistPage?ArtistID=${album['ArtistID']}" class="back">&laquo; Back to ${album['ArtistName']}</a>
+</%def>
+
+<%def name="body()">
+	<div class="table_wrapper">
+		<div id="albumheader" class="clearfix">	
+			<div id="albumImg">
+				<img height="200" alt="" class="albumArt" src="artwork/album/${album['AlbumID']}">
+			</div>
+			
+			<h1><a href="http://musicbrainz.org/release-group/${album['AlbumID']}">${album['AlbumTitle']}</a></h1>
+			<h2><a href="http://musicbrainz.org/artist/${album['ArtistID']}">${album['ArtistName']}</a></h2>
+			<%
+				totalduration = myDB.action("SELECT SUM(TrackDuration) FROM tracks WHERE AlbumID=?", [album['AlbumID']]).fetchone()[0]
+				totaltracks = len(myDB.select("SELECT TrackTitle from tracks WHERE AlbumID=?", [album['AlbumID']]))
+				try:
+					albumduration = helpers.convert_milliseconds(totalduration)
+				except:
+					albumduration = 'n/a'
+			
+			%>
+			<div class="albuminfo">
+				<div id="albumInfo"></div>
+				<ul>
+					<li>Tracks: <span>${totaltracks}</span></li> 
+					<li>Duration: <span>${albumduration}</span></li>
+				</ul>
+			</div>
+			
+		</div>
+		<div id="track_wrapper">
+			<table class="display" id="track_table">
+				<thead>
+					<tr>
+						<th id="number">#</th>
+						<th id="name">Track Title</th>
+						<th id="duration">Duration</th>
+						<th id="location">Local File</th>
+						<th id="bitrate">Bit Rate</th>
+						<th id="format">Format</th>
+					</tr>
+				</thead>
+				<tbody>
+				%for track in tracks:
+					<%
+						if track['Location']:
+							grade = 'A'
+							location = track['Location']
+						else:
+							grade = 'X'
+							location = ''
+							
+						if track['BitRate']:
+							bitrate = str(track['BitRate']/1000) + ' kbps'
+						else:
+							bitrate = ''
+
+						try:
+							trackduration = helpers.convert_milliseconds(track['TrackDuration'])
+						except:
+							trackduration = 'n/a'
+
+						if not track['Format']:
+							format = ''
+						else:
+							format = track['Format']
+					%>
+					<tr class="grade${grade}">
+						<td id="number">${track['TrackNumber']}</td>
+						<td id="name">${track['TrackTitle']}</td>
+						<td id="duration">${trackduration}</td>
+						<td id="location">${location}</td>
+						<td id="bitrate">${bitrate}</td>
+						<td id="format">${format}</td>
+					</tr>
+				%endfor
+				<%
+				unmatched = myDB.select('SELECT * from have WHERE ArtistName LIKE ? AND AlbumTitle LIKE ? AND Matched = "Failed" ORDER BY CAST(TrackNumber AS INTEGER)', [album['ArtistName'], album['AlbumTitle']])
+				%>
+				%if unmatched:
+					 %for track in unmatched:
+					 <%
+					 	duration = helpers.convert_seconds(float(track['TrackLength']))
+					 %>
+					<tr class="gradeC">
+						<td id="number">${track['TrackNumber']}</td>
+						<td id="name">${track['TrackTitle']}</td>
+						<td id="duration">${duration}</td>
+						<td id="location">${track['Location']}</td>
+						<td id="bitrate">${int(track['BitRate'])/1000} kbps</td>
+						<td id="format">${track['Format']}</td>
+					</tr>
+					%endfor
+				%endif
+				</tbody>
+			</table>
+		</div>
+	</div>
+</%def>
+
+<%def name="headIncludes()">
+	<link rel="stylesheet" href="interfaces/default/css/data_table.css">
+</%def>
+
+<%def name="javascriptIncludes()">
+	<script src="js/libs/jquery.dataTables.min.js"></script>
+	<script>
+	function getAlbumInfo() {
+		var id = "${album['AlbumID']}";
+		var elem = $("#albumInfo");
+		getInfo(elem,id,'album');
+	}
+	
+	function initThisPage() {
+		$('#album_chooser').click(function() {
+			$('#dialog').dialog({ width: "500px" });
+			return false;
+		});
+		$('#edit_search_term').click(function() {
+			$('#dialog2').dialog({ width: "500px" });
+			return false;
+		});
+		$('#refresh_artist').click(function() {
+			$('#dialog').dialog("close");
+		});
+		initActions();
+		setTimeout(function(){
+			initFancybox();
+			},1000);
+		
+		$('#track_table').dataTable({
+			"aaSorting": [],
+			"bFilter": false,
+			"bInfo": false,
+			"bPaginate": false,
+			"bDestroy": true
+		});		
+	};
+	
+	$(document).ready(function()	{
+		getAlbumInfo();
+		initThisPage();
+	});
+
+	</script>
+</%def>

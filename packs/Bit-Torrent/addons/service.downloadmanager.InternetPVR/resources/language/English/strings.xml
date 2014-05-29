@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+	<!-- InternetPVR -->
+	<string id="1000">General</string>
+	<string id="1010">Enable/Disable Trackers</string>
+	<string id="1024">Enable Sickbeard (TVShow Tracker) Port: 8082</string>
+	<string id="1025">Enable Couchpotato (Movie Tracker) Port: 8083</string>
+	<string id="1026">Enable Headphones (Music Tracker) Port: 8084</string>
+	<string id="1030">Authentication (Keep blank to disable)</string>
+	<string id="1032">Username</string>
+	<string id="1033">Password</string>
+	<string id="1040">Network Settings</string>
+	<string id="1041">Allowed IP addresses (0.0.0.0 = Allow all IP's)</string>
+        <string id="1050">Restart InternetPVR Suite on XBMC suspend / resume</string>
+        <string id="1052">Enable Restart on suspend / resume</string>
+	<string id="3000">Folders</string>
+	<string id="3005">Simple Mode means all you need to worry about are the folder locations:</string>
+	<string id="3006">Enable simple mode</string>
+	<string id="3007">Log on to [TinyIP]:[PORT] to setup Sickbeard, CouchPotato & Headphones</string>
+	<string id="3010">Set default location for your media:</string>
+	<string id="3020">Default Movie Directory</string>
+	<string id="3030">Default TV Show Directory</string>
+	<string id="3040">Default Music Directory</string>
+	<string id="3050">Set default downloads directory: (External device recomended)</string>
+	<string id="3060">Download Directory</string>
+	<string id="3070">Incoming (incomplete) Directory</string>
+	<string id="3080">Watch Directory</string>
+</strings>

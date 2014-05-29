@@ -1,0 +1,25 @@
+1.0.6
+- Added option for simple mode in settings.
+
+1.0.5
+- Added settings for Transmission download location.
+
+1.0.4
+- Updated CouchPotato to-b69f8b7
+- Fixed folder locations.
+- Added default media locations.
+- Fixed default settings for SB, CP and HP.
+
+1.0.3
+- Made changes to description and settings menu.
+
+1.0.2
+- Updated CouchPotato to-36782768a4a4018964c20d6b8d8bfa8e4c0018d2
+- Updated SickBeard to-092c0e76b56a8b97ceadc1635632dcbdd3b7d60c
+
+1.0.1
+- Made changes to run add-on on generic linux OS.
+- Fixed bug causing start script to fail to import configobj.
+
+1.0.0
+- initial version forked from SickPotatoHead-1.2.9

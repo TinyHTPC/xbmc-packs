@@ -1,0 +1,12 @@
+<settings>
+    <setting id="api_key" value="f181f1fff3c34ba5bc27b0e1c846cfe4" />
+    <setting id="ba_password" value="" />
+    <setting id="ba_username" value="" />
+    <setting id="default_profile" value="" />
+    <setting id="hostname" value="localhost" />
+    <setting id="password" value="" />
+    <setting id="port" value="8083" />
+    <setting id="url_base" value="" />
+    <setting id="use_https" value="false" />
+    <setting id="username" value="" />
+</settings>

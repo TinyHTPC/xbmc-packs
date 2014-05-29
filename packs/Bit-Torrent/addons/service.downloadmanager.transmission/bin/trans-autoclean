@@ -1,0 +1,31 @@
+#!/bin/sh
+# This script will remove torrents that have been downloaded and seeded by Transmission.
+# The idea is to set a seeding limit in CP, SB & Transmission that will stop torrent that have been downloaded and seeded.
+# The best apporach when setting download folder is to have separate folders for SB, CP and other Transmission downloads.
+# Add appropriate line to your crontab like "0 * * * * /usr/bin/transmission_clean.sh 1> /dev/null", this will initiate the script once an hour without logging.
+# I'm not the original author of the script so license is
+# Originally posted on http://1000umbrellas.com/2010/10/05/updated-how-to-automatically-move-and-remove-transmission-daemon-downloads (available on Internet Archive)
+# and also at http://www.goedonthouden.com/transmission-daemon-auto-remove-torrents/
+# and patched from https://gist.github.com/bulljit/791609
+
+
+ADDON_DIR="$HOME/.xbmc/addons/service.downloadmanager.transmission"
+REMOTE=$ADDON_DIR/bin/transmission-remote
+
+TORRENTLIST=`$REMOTE --list | grep -Eo '^ *([0-9]+)'`
+ 
+for TORRENTID in $TORRENTLIST
+do
+echo "* * * * * Operations on torrent ID $TORRENTID starting. * * * * *"
+ 
+DL_COMPLETED=`$REMOTE --auth=user:password --torrent $TORRENTID --info | grep "Percent Done: 100%"`
+DL_STOPPED=`$REMOTE --auth=user:password --torrent $TORRENTID --info | grep "State: Stopped"`
+if [ "$DL_COMPLETED" != "" ] && [ "$DL_STOPPED" != "" ]; then
+echo "Torrent #$TORRENTID is completed."
+echo "Removing torrent from list."
+$REMOTE --auth=user:password --torrent $TORRENTID --remove
+else
+echo "Torrent #$TORRENTID is not completed. Ignoring."
+fi
+echo "* * * * * Operations on torrent ID $TORRENTID completed. * * * * *"
+done

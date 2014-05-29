@@ -1,0 +1,23 @@
+1.0.7
+- Added script to remove finished torrents on Transmission start.
+
+1.0.6
+- Fixed error with file locations.
+
+1.0.5
+- Initial Release.
+- Added add-on description.
+
+1.0.4
+- Fix bugs and start script errors preventing Transmission service to start.
+
+1.0.3
+- Prepare for release
+
+1.0.2
+- Recompiled transmission-2.82.
+- Changed default locations.
+- Added GPL Licence.
+
+1.0.0
+- Initial version transmission-2.82

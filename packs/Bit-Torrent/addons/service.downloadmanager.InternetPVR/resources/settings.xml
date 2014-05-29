@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+   <!-- InternetPVR -->
+    <category label="1000">
+		<setting label="1010" type="lsep"/>
+		<setting id="SICKBEARD_LAUNCH" type="bool" label="1024" default="true" />
+		<setting id="COUCHPOTATO_LAUNCH" type="bool" label="1025" default="true" />
+		<setting id="HEADPHONES_LAUNCH" type="bool" label="1026" default="true" />
+		<setting type="sep" />
+		<setting label="1030" type="lsep"/>
+		<setting id="InternetPVR_USER" type="text" label="1032" default=""/>
+		<setting id="InternetPVR_PWD" type="text" label="1033" default=""/>
+		<setting type="sep" />
+		<setting label="1040" type="lsep"/>
+		<setting id="InternetPVR_IP" type="text" label="1041" default="0.0.0.0"/>
+		<setting type="sep" />
+		<setting label="1050" type="lsep"/>
+                <setting id="RESTART_ON_RESUME" type="bool" label="1052" default="false" />
+		<setting type="sep" />
+    </category>
+    <category label="3000">
+		<setting label="3005" type="lsep"/>
+		<setting id="InternetPVR_MODE" type="bool" label="3006" default="true" visible="true"/>
+                <setting label="3007" type="lsep" visible="!eq(-1,true)"/>
+		<setting type="sep" />
+                <setting label="3010" type="lsep" visible="!eq(-3,false)"/>
+		<setting id="MOVIES_DIR" type="folder" label="3020" source="auto" option="writeable" default="/root/Movies" visible="!eq(-4,false)" />
+		<setting id="TVSHOW_DIR" type="folder" label="3030" source="auto" option="writeable" default="/root/TVShows" visible="!eq(-5,false)" />
+		<setting id="MUSIC_DIR" type="folder" label="3040" source="auto" option="writeable" default="/root/Music" visible="!eq(-6,false)" />
+		<setting id="MUSIC_DIR" type="folder" label="3040" source="auto" option="writeable" default="/root/Music" visible="!eq(-7,false)" />
+		<setting type="sep" visible="!eq(-8,false)" />
+		<setting label="3050" type="lsep"/>
+		<setting id="TRANSMISSION_DL_DIR" type="folder" label="3060" value="" default="/root/Downloads/" />
+		<setting type="sep" />
+    </category>
+</settings>

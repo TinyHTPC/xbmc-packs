@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+<category label="Network">
+<setting id="Sickbeard IP" type="text" label="Sickbeard IP" default="" />
+<setting id="Sickbeard Port" type="text" label="Sickbeard Port" default="" />
+<setting id="Use SSL" type="bool" label="Use SSL" default="false" />
+<setting type="sep" />
+<setting id="CustomURL" type="bool" label="Use Custom Sickbeard URL" default="false" />
+<setting id="Sickbeard URL" type="text" label="Sickbeard URL" default="http://" enable="eq(-1,true)"/>
+</category>
+<category label="Login">
+<setting id="Sickbeard Username" type="text" label="Sickbeard Username" default="" />
+<setting id="Sickbeard Password" type="text" label="Sickbeard Password" default="" />
+</category>
+</settings>

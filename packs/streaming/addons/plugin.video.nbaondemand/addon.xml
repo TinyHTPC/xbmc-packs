@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.nbaondemand" name="NBA On-demand" version="1.1.6" provider-name="lambda,enen92">
+	<requires>
+		<import addon="xbmc.python" version="2.1.0"/>
+		<import addon="script.module.simplejson" version="2.0.10"/>
+		<import addon="script.common.plugin.cache" version="0.9.1"/>
+		<import addon="script.module.parsedom" version="0.9.1"/>
+		<import addon="plugin.video.youtube" version="2.9.2"/>
+	</requires>
+	<extension point="xbmc.python.pluginsource" library="default.py">
+		<provides>video</provides>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en">Watch NBA games whenever you want</summary>
+		<description lang="en">Watch NBA games whenever you want</description>
+		<summary lang="el">Παρακολουθήστε αγώνες NBA ότι ώρα θέλετε</summary>
+		<description lang="el">Παρακολουθήστε αγώνες NBA ότι ώρα θέλετε</description>
+		<summary lang="fr">Regarder les matchs de la NBA à tout moment</summary>
+		<description lang="fr">Regarder les matchs de la NBA à tout moment</description>
+		<summary lang="nl">NBA video's kijken wanneer je wilt</summary>
+		<description lang="nl">NBA video's kijken wanneer je wilt</description>
+		<summary lang="pl">Oglądaj mecze NBA gdziekolwiek zechcesz</summary>
+		<description lang="pl">Oglądaj mecze NBA gdziekolwiek zechcesz</description>
+		<summary lang="pt">Assista aos jogos da NBA quando quiser</summary>
+		<description lang="pt">Assista aos jogos da NBA quando quiser</description>
+		<summary lang="pt_BR">Assista aos jogos da NBA quando quiser</summary>
+		<description lang="pt_BR">Assista aos jogos da NBA quando quiser</description>
+		<summary lang="ro">Urmărește oricând meciuri din NBA</summary>
+		<description lang="ro">Urmărește oricând meciuri din NBA</description>
+		<disclaimer lang="en">The author does not host or distribute any of the content displayed by this addon. The author does not have any affiliation with the content provider.</disclaimer>
+		<forum>http://www.xbmchub.com/forums/lambdas-xbmc-repository/</forum>
+		<source>https://github.com/lambda81/lambda-xbmc-addons</source>
+		<website>http://www.xbmchub.com/</website>
+		<platform>all</platform>
+	</extension>
+</addon>
