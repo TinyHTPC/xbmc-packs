@@ -1,3 +1,2 @@
 #!/bin/sh
-
 kill `ps | grep -E 'python.*service.downloadmanager.InternetPVR' | awk '{print $1}'` 2>/dev/null

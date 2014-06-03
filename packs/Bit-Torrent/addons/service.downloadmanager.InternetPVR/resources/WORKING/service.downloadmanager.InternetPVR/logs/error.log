@@ -1,0 +1,108 @@
+17:08:50 CRITICAL [31m[                 __main__] Traceback (most recent call last):
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/CouchPotato.py", line 129, in <module>
+    l.run()
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/CouchPotato.py", line 84, in run
+    runCouchPotato(self.options, base_path, sys.argv[1:], data_dir = self.data_dir, log_dir = self.log_dir, Env = Env)
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/couchpotato/runner.py", line 305, in runCouchPotato
+    server.listen(config['port'], config['host'])
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/libs/tornado/tcpserver.py", line 117, in listen
+    sockets = bind_sockets(port, address=address)
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/libs/tornado/netutil.py", line 104, in bind_sockets
+    sock.bind(sockaddr)
+  File "/usr/lib/python2.7/socket.py", line 224, in meth
+error: [Errno 98] Address already in use
+[0m
+Traceback (most recent call last):
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/CouchPotato.py", line 129, in <module>
+    l.run()
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/CouchPotato.py", line 84, in run
+    runCouchPotato(self.options, base_path, sys.argv[1:], data_dir = self.data_dir, log_dir = self.log_dir, Env = Env)
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/couchpotato/runner.py", line 305, in runCouchPotato
+    server.listen(config['port'], config['host'])
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/libs/tornado/tcpserver.py", line 117, in listen
+    sockets = bind_sockets(port, address=address)
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/libs/tornado/netutil.py", line 104, in bind_sockets
+    sock.bind(sockaddr)
+  File "/usr/lib/python2.7/socket.py", line 224, in meth
+error: [Errno 98] Address already in use
+19:26:41 CRITICAL [31m[                 __main__] Traceback (most recent call last):
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/CouchPotato.py", line 129, in <module>
+    l.run()
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/CouchPotato.py", line 84, in run
+    runCouchPotato(self.options, base_path, sys.argv[1:], data_dir = self.data_dir, log_dir = self.log_dir, Env = Env)
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/couchpotato/runner.py", line 305, in runCouchPotato
+    server.listen(config['port'], config['host'])
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/libs/tornado/tcpserver.py", line 117, in listen
+    sockets = bind_sockets(port, address=address)
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/libs/tornado/netutil.py", line 104, in bind_sockets
+    sock.bind(sockaddr)
+  File "/usr/lib/python2.7/socket.py", line 224, in meth
+error: [Errno 98] Address already in use
+[0m
+Traceback (most recent call last):
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/CouchPotato.py", line 129, in <module>
+    l.run()
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/CouchPotato.py", line 84, in run
+    runCouchPotato(self.options, base_path, sys.argv[1:], data_dir = self.data_dir, log_dir = self.log_dir, Env = Env)
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/couchpotato/runner.py", line 305, in runCouchPotato
+    server.listen(config['port'], config['host'])
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/libs/tornado/tcpserver.py", line 117, in listen
+    sockets = bind_sockets(port, address=address)
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/libs/tornado/netutil.py", line 104, in bind_sockets
+    sock.bind(sockaddr)
+  File "/usr/lib/python2.7/socket.py", line 224, in meth
+error: [Errno 98] Address already in use
+19:32:02 CRITICAL [31m[                 __main__] Traceback (most recent call last):
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/CouchPotato.py", line 129, in <module>
+    l.run()
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/CouchPotato.py", line 84, in run
+    runCouchPotato(self.options, base_path, sys.argv[1:], data_dir = self.data_dir, log_dir = self.log_dir, Env = Env)
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/couchpotato/runner.py", line 305, in runCouchPotato
+    server.listen(config['port'], config['host'])
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/libs/tornado/tcpserver.py", line 117, in listen
+    sockets = bind_sockets(port, address=address)
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/libs/tornado/netutil.py", line 104, in bind_sockets
+    sock.bind(sockaddr)
+  File "/usr/lib/python2.7/socket.py", line 224, in meth
+error: [Errno 98] Address already in use
+[0m
+Traceback (most recent call last):
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/CouchPotato.py", line 129, in <module>
+    l.run()
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/CouchPotato.py", line 84, in run
+    runCouchPotato(self.options, base_path, sys.argv[1:], data_dir = self.data_dir, log_dir = self.log_dir, Env = Env)
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/couchpotato/runner.py", line 305, in runCouchPotato
+    server.listen(config['port'], config['host'])
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/libs/tornado/tcpserver.py", line 117, in listen
+    sockets = bind_sockets(port, address=address)
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/libs/tornado/netutil.py", line 104, in bind_sockets
+    sock.bind(sockaddr)
+  File "/usr/lib/python2.7/socket.py", line 224, in meth
+error: [Errno 98] Address already in use
+19:37:09 CRITICAL [31m[                 __main__] Traceback (most recent call last):
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/CouchPotato.py", line 129, in <module>
+    l.run()
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/CouchPotato.py", line 84, in run
+    runCouchPotato(self.options, base_path, sys.argv[1:], data_dir = self.data_dir, log_dir = self.log_dir, Env = Env)
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/couchpotato/runner.py", line 305, in runCouchPotato
+    server.listen(config['port'], config['host'])
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/libs/tornado/tcpserver.py", line 117, in listen
+    sockets = bind_sockets(port, address=address)
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/libs/tornado/netutil.py", line 104, in bind_sockets
+    sock.bind(sockaddr)
+  File "/usr/lib/python2.7/socket.py", line 224, in meth
+error: [Errno 98] Address already in use
+[0m
+Traceback (most recent call last):
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/CouchPotato.py", line 129, in <module>
+    l.run()
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/CouchPotato.py", line 84, in run
+    runCouchPotato(self.options, base_path, sys.argv[1:], data_dir = self.data_dir, log_dir = self.log_dir, Env = Env)
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/couchpotato/runner.py", line 305, in runCouchPotato
+    server.listen(config['port'], config['host'])
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/libs/tornado/tcpserver.py", line 117, in listen
+    sockets = bind_sockets(port, address=address)
+  File "/root/.xbmc/addons/service.downloadmanager.InternetPVR/CouchPotatoServer/libs/tornado/netutil.py", line 104, in bind_sockets
+    sock.bind(sockaddr)
+  File "/usr/lib/python2.7/socket.py", line 224, in meth
+error: [Errno 98] Address already in use

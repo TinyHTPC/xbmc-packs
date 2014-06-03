@@ -18,5 +18,11 @@
 		<setting id="TRANSMISSION_DL_DIR" type="folder" label="3121" value="" default="/root/Downloads/complete" />
 		<setting id="TRANSMISSION_INC_DIR" type="folder" label="3122" value="" default="/root/Downloads/incoming" />
 		<setting id="TRANSMISSION_WATCH_DIR" type="folder" label="3123" value="" default="/root/Downloads/torrents" />
+
+		<setting type="sep" />
+		<setting label="Simple Mode uses only default Transmission settings:" type="lsep"/>
+		<setting id="TRANSMISSION_SIMPLE" type="bool" label="Enable simple mode" default="true" visible="true"/>
+		<setting label="Changes made to Transmission WebUI will be wiped on reboot." type="lsep" visible="!eq(-1,false)" />
+		<setting label="Changes made to Transmission WebUI will be saved on reboot." type="lsep" visible="!eq(-2,true)" />
     </category>
 </settings>

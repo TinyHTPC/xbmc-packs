@@ -1,0 +1,30 @@
+28-May-2014 15:58:41 - INFO    :: MainThread : Checking to see if the database has all tables....
+28-May-2014 15:58:45 - INFO    :: MainThread : Daemonized to PID: 2450
+28-May-2014 15:58:45 - DEBUG   :: MainThread : Using the following server values:
+MBHost: musicbrainz.org ; MBPort: 80  ;  Sleep Interval: 1 
+28-May-2014 15:58:45 - INFO    :: MainThread : Starting Headphones on http://0.0.0.0:8084/
+28-May-2014 16:03:01 - INFO    :: MainThread : Checking to see if the database has all tables....
+28-May-2014 16:03:01 - INFO    :: MainThread : Daemonized to PID: 2096
+28-May-2014 16:03:01 - DEBUG   :: MainThread : Using the following server values:
+MBHost: musicbrainz.org ; MBPort: 80  ;  Sleep Interval: 1 
+28-May-2014 16:03:01 - INFO    :: MainThread : Starting Headphones on http://0.0.0.0:8084/
+28-May-2014 17:08:49 - INFO    :: MainThread : Checking to see if the database has all tables....
+28-May-2014 17:08:49 - INFO    :: MainThread : Daemonized to PID: 3751
+28-May-2014 17:08:49 - DEBUG   :: MainThread : Using the following server values:
+MBHost: musicbrainz.org ; MBPort: 80  ;  Sleep Interval: 1 
+28-May-2014 17:08:49 - INFO    :: MainThread : Starting Headphones on http://0.0.0.0:8084/
+28-May-2014 19:26:38 - INFO    :: MainThread : Checking to see if the database has all tables....
+28-May-2014 19:26:38 - INFO    :: MainThread : Daemonized to PID: 6451
+28-May-2014 19:26:38 - DEBUG   :: MainThread : Using the following server values:
+MBHost: musicbrainz.org ; MBPort: 80  ;  Sleep Interval: 1 
+28-May-2014 19:26:38 - INFO    :: MainThread : Starting Headphones on http://0.0.0.0:8084/
+28-May-2014 19:32:00 - INFO    :: MainThread : Checking to see if the database has all tables....
+28-May-2014 19:32:00 - INFO    :: MainThread : Daemonized to PID: 6720
+28-May-2014 19:32:00 - DEBUG   :: MainThread : Using the following server values:
+MBHost: musicbrainz.org ; MBPort: 80  ;  Sleep Interval: 1 
+28-May-2014 19:32:00 - INFO    :: MainThread : Starting Headphones on http://0.0.0.0:8084/
+28-May-2014 19:37:07 - INFO    :: MainThread : Checking to see if the database has all tables....
+28-May-2014 19:37:07 - INFO    :: MainThread : Daemonized to PID: 6992
+28-May-2014 19:37:07 - DEBUG   :: MainThread : Using the following server values:
+MBHost: musicbrainz.org ; MBPort: 80  ;  Sleep Interval: 1 
+28-May-2014 19:37:07 - INFO    :: MainThread : Starting Headphones on http://0.0.0.0:8084/

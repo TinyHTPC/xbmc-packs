@@ -260,6 +260,7 @@ try:
         defaultConfig['General']['naming_sep_type']       = '1'
         defaultConfig['General']['naming_ep_type']        = '1'
         defaultConfig['General']['root_dirs']             = '0|' + sickbeard_watch_dir
+        defaultConfig['General']['process_automatically'] = '1'
         defaultConfig['Blackhole'] = {}
         defaultConfig['Blackhole']['torrent_dir']         = pInternetPVRWatchDir
         defaultConfig['EZRSS'] = {}
@@ -286,6 +287,7 @@ try:
         defaultConfig['General']['naming_sep_type']       = '1'
         defaultConfig['General']['naming_ep_type']        = '1'
         defaultConfig['General']['root_dirs']             = '0|' + sickbeard_watch_dir
+        defaultConfig['General']['process_automatically'] = '1'
         defaultConfig['Blackhole'] = {}
         defaultConfig['Blackhole']['torrent_dir']         = pInternetPVRWatchDir
         defaultConfig['EZRSS'] = {}
@@ -365,7 +367,7 @@ try:
         defaultConfig['searcher'] = {}
         defaultConfig['searcher']['preferred_method']     = 'torrent'
         defaultConfig['searcher']['required_words']       = '720p, 1080p'
-        defaultConfig['searcher']['preferred_words']      = 'YIFY'
+        defaultConfig['searcher']['preferred_words']      = 'YIFY, x264, BrRip'
         defaultConfig['nzbindex'] = {}
         defaultConfig['nzbindex']['enabled']              = '0'
         defaultConfig['newznab'] = {}
@@ -374,6 +376,7 @@ try:
         defaultConfig['thepiratebay']['enabled']          = '1'
         defaultConfig['yify'] = {}
         defaultConfig['yify']['enabled']                  = '1'
+        defaultConfig['yify']['extra_score']              = '30000'
 
     if 'true' in transauth:
         defaultConfig['transmission'] = {}
@@ -410,7 +413,7 @@ try:
         defaultConfig['searcher'] = {}
         defaultConfig['searcher']['preferred_method']     = 'torrent'
         defaultConfig['searcher']['required_words']       = '720p, 1080p'
-        defaultConfig['searcher']['preferred_words']      = 'YIFY'
+        defaultConfig['searcher']['preferred_words']      = 'YIFY, x264, BrRip'
 
     couchPotatoServerConfig.merge(defaultConfig)
     couchPotatoServerConfig.write()
