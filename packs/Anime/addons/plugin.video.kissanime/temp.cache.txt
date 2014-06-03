@@ -1,0 +1,3 @@
+#LWP-Cookies-2.0
+Set-Cookie3: __cfduid=dd7a2d1b3c3c176d960e35f72e7018c651401801555798; path="/"; domain=".kissanime.com"; path_spec; domain_dot; expires="2019-12-23 23:50:00Z"; HttpOnly=None; version=0
+Set-Cookie3: ASP.NET_SessionId=jnxvcs2eymqrovsycrqbxbkw; path="/"; domain="kissanime.com"; path_spec; discard; HttpOnly=None; version=0

@@ -1,0 +1,129 @@
+<settings>
+	<category label="General">
+		<setting visible="true" id="core-player" type="labelenum" label="Player Core" values="AUTO|DVDPLAYER|MPLAYER|PAPLAYER"             default="AUTO"/>
+		<setting id="genre-thumbs" type="labelenum" label="Genre Style" values="ArtSite|icon.png|sitelogo|next|prev|hot|updated|skin.primal|skin.tangency|1ch.PrimeWire|1ch.Glossy_Black|kiss.png|genre.jpg|turtle.jpg|mkv.png|mp4.png|flv.png" default="ArtSite"/>
+		<setting id="az-thumbs" type="labelenum" label="ALL|#|A-Z Style" values="ArtSite|icon.png|sitelogo|next|prev|hot|updated|kiss.png|genre.jpg|turtle.jpg|mkv.png|mp4.png|flv.png|chromatix.lower|chromatix.upper|dooffy.lower|dooffy.upper|balloon-green|balloon-orange|balloon-grey|red-orb|ariil.letter|hydrattz.pink|hydrattz.blue|hydrattz.gold|hydrattz.red|hydrattz.black|hydrattz.grey|hydrattz.lg|hydrattz.dg|hydrattz.violet|hydrattz.orange|mattahan" default="ArtSite"/>
+		<setting id="pages"    type="labelenum" label="Number of Pages" values="1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20"             default="1"/>
+		<setting id="linksmaxshown" type="labelenum" label="Number of Links (Host Menu)" values="1|2|3|4|5|10|15|20|25|30|35|40|45|50|55|60|70|80|90|99|100|150|200|250|300|350|400|450|500|550|600|700|800|900|1000|1500|2000|3000|9000|9999"             default="9999"/>
+    <setting label="Single Line Items" type="bool" 	id="singleline" 		default="false"/>
+    <setting label="Use Custom Proxy" type="bool" 	id="customproxy" 		default="false"/>
+    <setting label="Proxy (proxynova.com)" type="text" id="proxy" 	default="http://173.213.96.229:7808" enable="!eq(-1,false)"/>
+		<setting id="AntiTag"  type="labelenum" label="AntiTag Sleep Timer (Between HTML Attempts)" values="2000|4000|5000|6000|7000|8000|9000|10000|11000|12000|13000|14000|15000|16000|17000|18000|19000|20000"             default="4000"/>
+		<setting id="ResTimer"  type="labelenum" label="Sleep Timer Before Display of Links" values="0|1|50|100|500|1000|2000|4000|5000|6000|7000|8000|9000|10000|11000|12000|13000|14000|15000|16000|17000|18000|19000|20000"             default="0"/>
+		<setting id="debug-enable" 	type="bool" label="Enable Debugging to File" default="false" visible="true"/>
+		<setting id="debug-show" 		type="bool" label="Enable Debugging to Notice(s)" default="false" visible="true"/>
+		<setting visible="true" id="device" type="labelenum" default="NORMAL" label="Device" values="NORMAL|OUYA(Gotham)" />
+		<setting id="check-github-messages" 		type="bool" label="Check Message(s) @ Respository" default="false" visible="true"/>
+	</category>
+	<category label="Main-Menu">
+		<setting visible="true" id="enable-autoplay-lvp" type="bool" label="Display Last Video [Played]" default="true" />
+		<setting visible="true" id="enable-autoplay-lvap" type="bool" label="Display Last Video [AutoPlay]" default="true" />
+		<setting visible="true" id="enable-autoplay-lsv" type="bool" label="Display Last Title Visited" default="true" />
+		<setting id="oldmenu" 		type="bool" label="Display Old Items on the Main Menu" default="false" visible="true"/>
+		<setting id="label-empty-favorites" 		type="bool" label="Show Labels in List: Empty Favorites" default="false" visible="true"/>
+	</category>
+	<category label="AutoPlay">
+		<setting visible="true" id="enable-autoplay" type="bool" label="Enable AutoPlay [Default Url]" default="false" />
+		<setting visible="true" id="autoplay-select" type="labelenum" label="AutoPlay Method" values="Next|Last|1920x1080.mp4|1920x1080.flv|1280x720.mp4|1280x720.flv|854x480.mp4|854x480.flv|640x480.mp4|640x480.flv|640x360.mp4|640x360.flv|480x360.mp4|480x360.flv|426x240.mp4|426x240.flv|320x240.mp4|320x240.flv" default="Next" enable="!eq(-1,false)" />
+	</category>
+	<category label="Auto-View">
+		<setting id="auto-view" type="bool"   label="Enable Automatic View" default="false"/>
+		<setting id="default-view"   type="number" label="Default"               default="500"  enable="!eq(-1,false)" />
+		<setting visible="false" id="movies-view"    type="number" label="Movies"               default="515"  enable="!eq(-2,false)"/>
+		<setting visible="false" id="tvshows-view"   type="number" label="TV Shows"             default="515"  enable="!eq(-3,false)"/>
+		<setting visible="false" id="season-view"    type="number" label="Seasons"              default="50"   enable="!eq(-4,false)"/>
+		<setting id="episode-view"   type="number" label="Episodes"              default="515"  enable="!eq(-5,false)"/>
+		<setting id="links-view"   	 type="number" label="Links"              	 default="50"   enable="!eq(-6,false)"/>
+		<setting id="anime-view"   	 type="number" label="Anime"              	 default="515"  enable="!eq(-7,false)"/>
+		<setting id="genre-view"   	 type="number" label="Genres"              	 default="500"  enable="!eq(-8,false)"/>
+	</category>
+	<category label="MetaData">
+		<setting visible="true" id="enableMeta" 	type="bool" label="Enable Metadata" default="false" />
+		<setting visible="true" id="episodeMeta" 	type="bool" label="Enable Metadata for Episodes" default="false" enable="!eq(-1,false)" />
+		<setting visible="true" id="episodeLongListsMeta" 	type="bool" label="Enable Metadata for Episodes with long lists" default="true" enable="!eq(-1,false)" />
+		<setting visible="true" id="enable-genres-in-plot" type="bool" label="Show Genre(s) in Plot Description." default="false" enable="!eq(-3,false)" />
+		<setting visible="false" id="metadata_movies" 			type="bool" label="(Movies)" 									default="true" />
+		<setting visible="false" id="metadata_tv" 					type="bool" label="(TV)" 											default="true" />
+		<setting visible="false" id="metadata_tv_shows" 		type="bool" label="(TV) >> Shows" 						default="true" enable="!eq(-1,false)" />
+		<setting visible="false" id="metadata_tv_episodes" 	type="bool" label="(TV) >> Episodes" 					default="true" enable="!eq(-1,false)" />
+		<setting visible="false" id="metadata_tv_ep_plot" 	type="bool" label="(TV) >> Episodes >> Plot" 	default="true" enable="!eq(-1,false)" />
+	</category>
+	<category label="SiteData">
+		<setting visible="true" id="Notyetaired" type="bool" label="Show listings marked: Not yet aired" default="true" />
+		<setting visible="true" id="enable-site-art" type="bool" label="Show Site Artwork when Meta Not Found." default="true" />
+		
+		<setting visible="true" id="episodeSort" 	type="bool" label="Sort Episodes starting at 001" default="true" />
+		<setting visible="true" id="show-ep-views" type="bool" label="Show Views" default="true" />
+		<setting visible="true" id="show-ep-status" type="bool" label="Show Status" default="true" />
+		<setting visible="true" id="show-ep-genres" type="bool" label="Show Genres" default="true" />
+		<setting visible="true" id="show-ep-showplot" type="bool" label="Show Series Plot Description" default="true" />
+	</category>
+	<category label="Markings">
+		<setting visible="true" id="enable-visited-left" type="bool" label="Show [COLOR deeppink]@[/COLOR] to Left of Show Titles." default="false" />
+		<setting visible="true" id="enable-visited-left-e" type="bool" label="Show [COLOR lime]@[/COLOR] to Left of Episode Titles." default="false" />
+		<setting visible="true" id="mark-hot" type="bool" label="Show [COLOR fuchsia]HOT[/COLOR] markings" default="true" />
+	</category>
+	<category label="Anime">
+		<setting visible="true" type="text" default=""  id="fav.movies.1.name" label="Favorites 1: Name" />
+		<setting visible="true" id="enable-fav-movies-2" type="bool" label="Enable Favorites 2" default="true" />
+		<setting visible="true" type="text" default="2" id="fav.movies.2.name" label="Favorites 2: Name" enable="!eq(-1,false)" />
+		<setting visible="true" id="enable-fav-movies-3" type="bool" label="Enable Favorites 3" default="true" />
+		<setting visible="true" type="text" default="3" id="fav.movies.3.name" label="Favorites 3: Name" enable="!eq(-1,false)" />
+		<setting visible="true" id="enable-fav-movies-4" type="bool" label="Enable Favorites 4" default="true" />
+		<setting visible="true" type="text" default="4" id="fav.movies.4.name" label="Favorites 4: Name" enable="!eq(-1,false)" />
+		<setting visible="true" id="movies-favorites-clear-enable" type="bool"   label="  \/  ( Dummy Proofing )" default="false"/>
+		<setting visible="true" label="Clear Favorites"   type="action" 	enable="!eq(-1,false)" action="RunPlugin(plugin://plugin.video.kissanime/default.py?mode=FavoritesEmpty&secction=&subfav=)"/>
+		<setting visible="true" label="Clear Favorites 2" type="action" 	enable="!eq(-2,false)" action="RunPlugin(plugin://plugin.video.kissanime/default.py?mode=FavoritesEmpty&secction=&subfav=2)"/>
+		<setting visible="true" label="Clear Favorites 3" type="action" 	enable="!eq(-3,false)" action="RunPlugin(plugin://plugin.video.kissanime/default.py?mode=FavoritesEmpty&secction=&subfav=3)"/>
+		<setting visible="true" label="Clear Favorites 4" type="action" 	enable="!eq(-4,false)" action="RunPlugin(plugin://plugin.video.kissanime/default.py?mode=FavoritesEmpty&secction=&subfav=4)"/>
+		
+		<setting visible="false" type="text" default=""  id="fav.tv.1.name" label="Favorites 1: Name" />
+		<setting visible="false" type="text" default="2" id="fav.tv.2.name" label="Favorites 2: Name" />
+		<setting visible="false" type="text" default="3" id="fav.tv.3.name" label="Favorites 3: Name" />
+		<setting visible="false" id="tv-favorites-clear-enable" type="bool"   		label="  \/  ( Dummy Proofing )" default="false"/>
+		<setting visible="false" label="Clear Favorites"   type="action" 	enable="!eq(-1,false)" action="RunPlugin(plugin://plugin.video.kissanime/default.py?mode=FavoritesEmpty&secction=tv&subfav=)"/>
+		<setting visible="false" label="Clear Favorites 2" type="action" 	enable="!eq(-2,false)" action="RunPlugin(plugin://plugin.video.kissanime/default.py?mode=FavoritesEmpty&secction=tv&subfav=2)"/>
+		<setting visible="false" label="Clear Favorites 3" type="action" 	enable="!eq(-3,false)" action="RunPlugin(plugin://plugin.video.kissanime/default.py?mode=FavoritesEmpty&secction=tv&subfav=3)"/>
+		<setting visible="false" id="tv-zerolinks-show" type="bool"   		label="Show Episodes with 0 (Zero) Links" default="true"/>
+	</category>
+	<category label="Downloads">
+		<setting visible="true" id="download_method"    	 		 type="labelenum" label="Download Method" values="Progress|ProgressBG|Test|Hidden|jDownloader (StreamURL)|jDownloader (Link)"             default="Hidden"/>
+		<setting visible="true" id="download_folder_movies" 			type="folder" label="Download Folder (Animes)"      	default="" />
+		<setting visible="false" id="download_folder_tv" 					type="folder" label="Download Folder (TV)    "      	default="" />
+		<setting visible="true" id="download_folder_wallpapers" 	type="folder" label="Download Folder (Wallpapers)  "  default="" />
+	</category>
+	<category label="Customize">
+		<setting id="text-hot" type="text" label="[HOT!]" default="[COLOR fuchsia][[I]HOT [/I]][/COLOR]" />
+		<setting id="text-series-right-watched"  type="text" label="Series|RIGHT|Watched" default="[COLOR deeppink]  @[/COLOR]" />
+		<setting id="text-series-left-watched"   type="text" label="Series|LEFT|Watched" default="[COLOR deeppink]@  [/COLOR]" />
+		<setting id="text-series-left-unwatched" type="text" label="Series|LEFT|Unwatched" default="[COLOR black]@  [/COLOR]" />
+		<setting id="text-page-forward-to" type="text" label="Jump Forward to Page No." default="[COLOR goldenrod]  >>  [COLOR red][/COLOR]...[/COLOR][COLOR blue] %s[/COLOR]" />
+		<setting id="text-page-back-to" type="text" label="Jump Backward to Page No." default="[COLOR goldenrod]  <<  [COLOR red][/COLOR]...[/COLOR][COLOR blue] %s[/COLOR]" />
+		<setting id="text-page-next"  type="text" label="Next Page" default="[COLOR goldenrod]  >  [COLOR red]Next[/COLOR]...[/COLOR][COLOR blue] %s%s[/COLOR]" />
+		<setting id="text-page-last"  type="text" label="Last Page" default="[COLOR goldenrod]  >>  [COLOR red]Last[/COLOR]...[/COLOR][COLOR blue] %s[/COLOR]" />
+		<setting id="text-page-first" type="text" label="First Page" default="[COLOR goldenrod]  <<  [COLOR red]First[/COLOR]...[/COLOR][COLOR blue] 1[/COLOR]" />
+		<setting id="text-page-prev"  type="text" label="Prev Page" default="[COLOR goldenrod]  <  [COLOR red]Previous[/COLOR]...[/COLOR][COLOR blue] %s[/COLOR]" />
+    <setting id="text-dub" type="text" label="(Dub)" default=" [COLOR green](Dub)[/COLOR]" />
+    <setting id="text-sub" type="text" label="(Sub)" default=" [COLOR blue](Sub)[/COLOR]" />
+    <setting id="text-ova" type="text" label="OVA" default=" [COLOR red]OVA[/COLOR]" />
+    <setting id="text-new" type="text" label="NEW" default=" [COLOR yellow]New[/COLOR]" />
+    <setting id="text-movie" type="text" label="Movie" default=" [COLOR maroon]Movie[/COLOR]" />
+    <setting id="text-colon" type="text" label=":" default=":[CR] " />
+    <setting id="text-tv" type="text" label="(TV)" default=" [COLOR cornflowerblue](TV)[/COLOR]" />
+    <setting id="text-specials" type="text" label="Specials" default=" [COLOR deeppink]Specials[/COLOR]" />
+    
+	</category>
+	<category label="Context Menu Items">
+		<setting visible="false" id="CMI_ShowInfo" 								type="bool" label="Show Information" 						default="true" />
+		<setting visible="false" id="CMI_FindAirDates" 						type="bool" label="Find Air Dates" 							default="true" />
+		<setting visible="false" id="CMI_ChangeFanart" 						type="bool" label="Change Fanart" 							default="true" />
+		<setting visible="false" id="CMI_DownloadWallpaper" 			type="bool" label="Download Wallpaper" 					default="true" />
+		<setting visible="false" id="CMI_Search1Channel" 					type="bool" label="Search 1Channel" 						default="true" />
+		<setting visible="false" id="CMI_SearchPrimeWire" 				type="bool" label="(TV) - Search PrimeWire" 		default="true" />
+	</category>
+	<category label="Account">
+    <setting label="Enable Account" type="bool" 	id="enable-accountinfo" 		default="false"/>
+    <setting label="Username" type="text"   id="username" 										default="" enable="!eq(-1,false)"/>
+    <setting label="Password" type="text"   id="password" option="hidden" 		default="" enable="!eq(-2,false)"/>
+	</category>
+</settings>
