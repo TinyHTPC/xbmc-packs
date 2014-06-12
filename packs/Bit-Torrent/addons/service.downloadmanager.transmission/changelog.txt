@@ -1,3 +1,6 @@
+1.0.9
+- Bug fixes.
+
 1.0.8
 - Fix - Force start to check that donwloads folders are present before starting Transmission. If not, give the option to disable transmission during this session.
 - Fix - Added simple mode to Transmission start to allow certain settings to be kept on reboot.

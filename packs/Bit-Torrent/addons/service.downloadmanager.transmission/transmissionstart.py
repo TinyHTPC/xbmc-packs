@@ -45,7 +45,14 @@ __stop__       = xbmc.translatePath( os.path.join( __cwd__, 'bin', "transmission
 __addonname__  = __settings__.getAddonInfo('name')
 __icon__       = __settings__.getAddonInfo('icon')
 
-pTransmission_Addon_Settings  = os.path.expanduser("~/.xbmc/userdata/addon_data/service.downloadmanager.transmission/settings.xml")
+pAddon                        = os.path.expanduser("~/.xbmc/addons/service.downloadmanager.transmission")
+pAddonHome                    = os.path.expanduser("~/.xbmc/userdata/addon_data/service.downloadmanager.transmission")
+pTransmission_Addon_Settings  = os.path.join(pAddonHome, "settings.xml")
+pDefaultSuiteSettings         = os.path.join(pAddon, "settings-default.xml")
+
+# create the settings file if missing
+if not os.path.exists(pTransmission_Addon_Settings):
+    shutil.copy(pDefaultSuiteSettings, pTransmission_Addon_Settings)
 
 #Get host IP:
 connected_ifaces = check_connection()

@@ -50,6 +50,10 @@ pAddonHome                    = os.path.expanduser("~/.xbmc/userdata/addon_data/
 pSuiteSettings                = os.path.join(pAddonHome, "settings.xml")
 pDefaultSuiteSettings         = os.path.join("~/.xbmc/addons/service.downloadmanager.InternetPVR/settings-default.xml")
 
+# create the settings file if missing
+if not os.path.exists(pSuiteSettings):
+    shutil.copy(pDefaultSuiteSettings, pSuiteSettings)
+
 #Get host IP:
 connected_ifaces = check_connection()
 if len(connected_ifaces) == 0:
@@ -97,6 +101,7 @@ movDIR = not os.path.exists(ipvrmov)
 musDIR = not os.path.exists(ipvrmus)
 tvDIR  = not os.path.exists(ipvrtv)
 dlDIR  = not os.path.exists(ipvrtransdl)
+print dlDIR
 #xbmc.executebuiltin('XBMC.Notification('+ __addonname__ +','+ movDIR + musDIR + tvDIR + dlDIR +',5000,'+ __icon__ +')')
 #Start Internet PVR Suite only if folder locations exists:
 dialog = xbmcgui.Dialog()
@@ -124,8 +129,21 @@ while (movDIR != "") or (musDIR != "") or (tvDIR != "") or (dlDIR != ""):
 		xbmc.executebuiltin('XBMC.Notification('+ __addonname__ +','+ started +',5000,'+ __icon__ +')')
 		break
 
+
+#Start force Shutdown of InternetPVR Suite if External Device is removed:
 while not xbmc.abortRequested:
-    time.sleep(0.250)
+    movDIR = not os.path.exists(ipvrmov)
+    musDIR = not os.path.exists(ipvrmus)
+    tvDIR  = not os.path.exists(ipvrtv)
+    dlDIR  = not os.path.exists(ipvrtransdl)
+    if movDIR or musDIR or tvDIR or dlDIR:
+        subprocess.Popen("chmod -R +x " + __cwd__ + "/bin/*" , shell=True, close_fds=True)
+        subprocess.Popen(__stop__, shell=True, close_fds=True)
+        dialog.ok(__addonname__, "Device Removal Detected!", __addonname__+" has been disabled for this session.", "[B]To use "+__addonname__+" again, restart XBMC[/B]")
+        xbmc.executebuiltin('XBMC.Notification('+ __addonname__ +','+ disabled +',5000,'+ __icon__ +')')
+        break
+    else:
+        time.sleep(0.250)
 
 subprocess.Popen("chmod -R +x " + __cwd__ + "/bin/*" , shell=True, close_fds=True)
-subprocess.Popen("exec "+__stop__, shell=True, close_fds=True)
+subprocess.Popen(__stop__, shell=True, close_fds=True)

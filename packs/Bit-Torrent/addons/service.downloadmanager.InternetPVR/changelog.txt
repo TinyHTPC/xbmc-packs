@@ -1,3 +1,10 @@
+1.0.9
+- Bug fixes.
+
+1.0.8
+- Fixed bug causing CP, SB and HP do not shutdown when addon was disabled.
+- Added check for removal of external device while CP, SB and HP are running.
+
 1.0.7
 - Fix - Force start to check that folders are present before starting SB, CP or HP. If not, give the option to not start the services during this session.
 - Fix - Adjusted time for Transmission restart
