@@ -1,4 +1,4 @@
 xbmc-packs
 ==========
 
-Popular XBMC addons
+XBMC Addon packs for 8726-MX HW

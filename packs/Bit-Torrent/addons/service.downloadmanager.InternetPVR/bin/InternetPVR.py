@@ -220,7 +220,7 @@ move(pTransmission_Settings_New, pTransmission_Addon_Settings)
 print "Restarting Transmission..."
 subprocess.Popen("chmod -R +x " + pTransmission_DIR + "/bin/*" , shell=True, close_fds=True)
 subprocess.Popen(pTransmission_Stop, shell=True, close_fds=True)
-time.sleep(7)
+time.sleep(15)
 subprocess.Popen(pTransmission_Start, shell=True, close_fds=True)
 time.sleep(1)
 
@@ -263,8 +263,8 @@ try:
         defaultConfig['General']['process_automatically'] = '1'
         defaultConfig['Blackhole'] = {}
         defaultConfig['Blackhole']['torrent_dir']         = pInternetPVRWatchDir
-        defaultConfig['EZRSS'] = {}
-        defaultConfig['EZRSS']['ezrss']                   = '1'
+        defaultConfig['KAT'] = {}
+        defaultConfig['KAT']['kat']                   = '1'
         defaultConfig['Womble'] = {}
         defaultConfig['Womble']['womble']                 = '0'
         defaultConfig['XBMC']['xbmc_notify_ondownload']   = '1'
@@ -290,8 +290,8 @@ try:
         defaultConfig['General']['process_automatically'] = '1'
         defaultConfig['Blackhole'] = {}
         defaultConfig['Blackhole']['torrent_dir']         = pInternetPVRWatchDir
-        defaultConfig['EZRSS'] = {}
-        defaultConfig['EZRSS']['ezrss']                   = '1'
+        defaultConfig['KAT'] = {}
+        defaultConfig['KAT']['kat']                   = '1'
         defaultConfig['Womble'] = {}
         defaultConfig['Womble']['womble']                 = '0'
         defaultConfig['XBMC']['xbmc_notify_ondownload']   = '1'

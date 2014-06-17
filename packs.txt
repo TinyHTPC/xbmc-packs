@@ -5,7 +5,7 @@ fanart="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/streaming/fanart
 description="This Package contains various add-ons for streaming media content from the internet.[CR]
 WARNING: Some add-ons contain content that may not be legal in your country! TinyHTPC accepts no responsibility for what you do with them."
 
-name="Torrents 12-06-2014"
+name="Torrents 17-06-2014"
 url="https://www.dropbox.com/s/k9q0u0rbaaokki7/Bit-Torrent.zip?dl=1"
 img="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/Bit-Torrent/icon.png"
 fanart="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/Bit-Torrent/fanart.jpg"

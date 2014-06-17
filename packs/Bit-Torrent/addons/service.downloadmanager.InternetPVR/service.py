@@ -17,7 +17,7 @@ def getAddonSetting(doc,id):
             return element.getAttribute('value')
 
 def check_connection():
-        time.sleep(5)
+        time.sleep(2)
         ifaces = ['eth0','eth1','wlan0','wlan1','wlan2','wlan3']
         connected = []
         i = 0
@@ -48,23 +48,26 @@ __icon__       = __settings__.getAddonInfo('icon')
 ###
 pAddonHome                    = os.path.expanduser("~/.xbmc/userdata/addon_data/service.downloadmanager.InternetPVR")
 pSuiteSettings                = os.path.join(pAddonHome, "settings.xml")
-pDefaultSuiteSettings         = os.path.join("~/.xbmc/addons/service.downloadmanager.InternetPVR/settings-default.xml")
+pDefaultSuiteSettings         = os.path.expanduser("~/.xbmc/addons/service.downloadmanager.InternetPVR/settings-default.xml")
 
 # create the settings file if missing
 if not os.path.exists(pSuiteSettings):
-    shutil.copy(pDefaultSuiteSettings, pSuiteSettings)
+   if not os.path.isdir(pAddonHome):
+      os.makedirs(pAddonHome)
+   shutil.copy(pDefaultSuiteSettings, pSuiteSettings)
 
 #Get host IP:
 connected_ifaces = check_connection()
 if len(connected_ifaces) == 0:
     print 'not connected to any network'
-    hostIP = "Port"
+    hostIP = "..."
 else:
-    hostIP = ([(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1])
+    GetIP = ([(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1])
+    hostIP = ' on '+GetIP
     print hostIP
 
 #Create Strings for notifications:
-started   = 'Service started on '+hostIP
+started   = 'Service started'+hostIP
 waiting   = 'Looking for Media download folders...'
 disabled  = 'Service disabled for this session'
 
@@ -113,10 +116,10 @@ while (movDIR != "") or (musDIR != "") or (tvDIR != "") or (dlDIR != ""):
 	if movDIR or musDIR or tvDIR or dlDIR:
 		promptstart = dialog.yesno(__addonname__, "Could not find your directories.", "Check that your location settings are correct.", "[B]Would you like to disable "+__addonname__+" for this session?[/B]")
 		if promptstart:
-			dialog.ok(__addonname__, __addonname__+" has been disabled for this session", "", "[B]To use "+__addonname__+", restart XBMC[/B]")
+			#dialog.ok(__addonname__, __addonname__+" has been disabled for this session", "", "[B]To use "+__addonname__+", restart XBMC[/B]")
 			subprocess.Popen("chmod -R +x " + __cwd__ + "/bin/*" , shell=True, close_fds=True)
 			subprocess.Popen(__stop__, shell=True, close_fds=True)
-			xbmc.executebuiltin('XBMC.Notification('+ __addonname__ +','+ disabled +',5000,'+ __icon__ +')')
+			#xbmc.executebuiltin('XBMC.Notification('+ __addonname__ +','+ disabled +',5000,'+ __icon__ +')')
 			break
 		else:
 			subprocess.Popen("chmod -R +x " + __cwd__ + "/bin/*" , shell=True, close_fds=True)

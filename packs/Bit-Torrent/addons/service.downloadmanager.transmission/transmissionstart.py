@@ -52,7 +52,9 @@ pDefaultSuiteSettings         = os.path.join(pAddon, "settings-default.xml")
 
 # create the settings file if missing
 if not os.path.exists(pTransmission_Addon_Settings):
-    shutil.copy(pDefaultSuiteSettings, pTransmission_Addon_Settings)
+   if not os.path.isdir(pAddonHome):
+      os.makedirs(pAddonHome)
+   shutil.copy(pDefaultSuiteSettings, pTransmission_Addon_Settings)
 
 #Get host IP:
 connected_ifaces = check_connection()
