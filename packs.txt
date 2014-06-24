@@ -12,7 +12,7 @@ fanart="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/Bit-Torrent/fana
 description="Torrent related add-ons setup for automatic downloading of Movies, TV Shows and Music.[CR]
 WARNING: Some add-ons contain content that may not be legal in your country! TinyHTPC accepts no responsibility for what you do with them."
 
-name="Anime 03-06-2014"
+name="Anime 22-06-2014"
 url="https://www.dropbox.com/s/xzeokdw3wcpq3ja/Anime.zip?dl=1"
 img="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/Anime/icon.png"
 fanart="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/Anime/fanart.jpg"

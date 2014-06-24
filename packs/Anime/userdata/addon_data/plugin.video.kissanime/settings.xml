@@ -1,0 +1,95 @@
+<settings>
+    <setting id="AntiTag" value="4000" />
+    <setting id="CMI_ChangeFanart" value="true" />
+    <setting id="CMI_DownloadWallpaper" value="true" />
+    <setting id="CMI_FindAirDates" value="true" />
+    <setting id="CMI_Search1Channel" value="true" />
+    <setting id="CMI_SearchPrimeWire" value="true" />
+    <setting id="CMI_ShowInfo" value="true" />
+    <setting id="Notyetaired" value="true" />
+    <setting id="ResTimer" value="0" />
+    <setting id="anime-view" value="515" />
+    <setting id="auto-view" value="false" />
+    <setting id="autoplay-select" value="Next" />
+    <setting id="az-thumbs" value="ArtSite" />
+    <setting id="check-github-messages" value="false" />
+    <setting id="core-player" value="AUTO" />
+    <setting id="customproxy" value="false" />
+    <setting id="debug-enable" value="false" />
+    <setting id="debug-show" value="false" />
+    <setting id="default-view" value="500" />
+    <setting id="device" value="NORMAL" />
+    <setting id="download_folder_movies" value="" />
+    <setting id="download_folder_tv" value="" />
+    <setting id="download_folder_wallpapers" value="" />
+    <setting id="download_method" value="Hidden" />
+    <setting id="enable-accountinfo" value="false" />
+    <setting id="enable-autoplay" value="false" />
+    <setting id="enable-autoplay-lsv" value="true" />
+    <setting id="enable-autoplay-lvap" value="true" />
+    <setting id="enable-autoplay-lvp" value="true" />
+    <setting id="enable-fav-movies-2" value="true" />
+    <setting id="enable-fav-movies-3" value="true" />
+    <setting id="enable-fav-movies-4" value="true" />
+    <setting id="enable-genres-in-plot" value="false" />
+    <setting id="enable-site-art" value="true" />
+    <setting id="enable-visited-left" value="false" />
+    <setting id="enable-visited-left-e" value="false" />
+    <setting id="enableMeta" value="false" />
+    <setting id="episode-view" value="515" />
+    <setting id="episodeLongListsMeta" value="true" />
+    <setting id="episodeMeta" value="false" />
+    <setting id="episodeSort" value="true" />
+    <setting id="fav.movies.1.name" value="" />
+    <setting id="fav.movies.2.name" value="2" />
+    <setting id="fav.movies.3.name" value="3" />
+    <setting id="fav.movies.4.name" value="4" />
+    <setting id="fav.tv.1.name" value="" />
+    <setting id="fav.tv.2.name" value="2" />
+    <setting id="fav.tv.3.name" value="3" />
+    <setting id="genre-thumbs" value="ArtSite" />
+    <setting id="genre-view" value="500" />
+    <setting id="label-empty-favorites" value="false" />
+    <setting id="links-view" value="50" />
+    <setting id="linksmaxshown" value="9999" />
+    <setting id="mark-hot" value="true" />
+    <setting id="metadata_movies" value="true" />
+    <setting id="metadata_tv" value="true" />
+    <setting id="metadata_tv_ep_plot" value="true" />
+    <setting id="metadata_tv_episodes" value="true" />
+    <setting id="metadata_tv_shows" value="true" />
+    <setting id="movies-favorites-clear-enable" value="false" />
+    <setting id="movies-view" value="515" />
+    <setting id="oldmenu" value="false" />
+    <setting id="pages" value="1" />
+    <setting id="password" value="" />
+    <setting id="proxy" value="http://173.213.96.229:7808" />
+    <setting id="season-view" value="50" />
+    <setting id="show-ep-genres" value="true" />
+    <setting id="show-ep-showplot" value="true" />
+    <setting id="show-ep-status" value="true" />
+    <setting id="show-ep-views" value="true" />
+    <setting id="singleline" value="false" />
+    <setting id="text-colon" value=":[CR] " />
+    <setting id="text-dub" value=" [COLOR green](Dub)[/COLOR]" />
+    <setting id="text-hot" value="[COLOR fuchsia][[I]HOT [/I]][/COLOR]" />
+    <setting id="text-movie" value=" [COLOR maroon]Movie[/COLOR]" />
+    <setting id="text-new" value=" [COLOR yellow]New[/COLOR]" />
+    <setting id="text-ova" value=" [COLOR red]OVA[/COLOR]" />
+    <setting id="text-page-back-to" value="[COLOR goldenrod]  &lt;&lt;  [COLOR red][/COLOR]...[/COLOR][COLOR blue] %s[/COLOR]" />
+    <setting id="text-page-first" value="[COLOR goldenrod]  &lt;&lt;  [COLOR red]First[/COLOR]...[/COLOR][COLOR blue] 1[/COLOR]" />
+    <setting id="text-page-forward-to" value="[COLOR goldenrod]  &gt;&gt;  [COLOR red][/COLOR]...[/COLOR][COLOR blue] %s[/COLOR]" />
+    <setting id="text-page-last" value="[COLOR goldenrod]  &gt;&gt;  [COLOR red]Last[/COLOR]...[/COLOR][COLOR blue] %s[/COLOR]" />
+    <setting id="text-page-next" value="[COLOR goldenrod]  &gt;  [COLOR red]Next[/COLOR]...[/COLOR][COLOR blue] %s%s[/COLOR]" />
+    <setting id="text-page-prev" value="[COLOR goldenrod]  &lt;  [COLOR red]Previous[/COLOR]...[/COLOR][COLOR blue] %s[/COLOR]" />
+    <setting id="text-series-left-unwatched" value="[COLOR black]@  [/COLOR]" />
+    <setting id="text-series-left-watched" value="[COLOR deeppink]@  [/COLOR]" />
+    <setting id="text-series-right-watched" value="[COLOR deeppink]  @[/COLOR]" />
+    <setting id="text-specials" value=" [COLOR deeppink]Specials[/COLOR]" />
+    <setting id="text-sub" value=" [COLOR blue](Sub)[/COLOR]" />
+    <setting id="text-tv" value=" [COLOR cornflowerblue](TV)[/COLOR]" />
+    <setting id="tv-favorites-clear-enable" value="false" />
+    <setting id="tv-zerolinks-show" value="true" />
+    <setting id="tvshows-view" value="515" />
+    <setting id="username" value="" />
+</settings>
