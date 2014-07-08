@@ -54,6 +54,7 @@ pDefaultSuiteSettings         = os.path.join(pAddon, "settings-default.xml")
 if not os.path.exists(pTransmission_Addon_Settings):
    if not os.path.isdir(pAddonHome):
       os.makedirs(pAddonHome)
+      os.makedirs(pAddonHome+'/torrents')
    shutil.copy(pDefaultSuiteSettings, pTransmission_Addon_Settings)
 
 #Get host IP:

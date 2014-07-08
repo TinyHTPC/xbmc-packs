@@ -1,3 +1,89 @@
+[B]Version 2.4.0[/B]
+- Reverted back to using t0mm0.common as addon.common is creating naming issues
+
+[B]Version 2.3.0[/B]
+- Added Cloudy
+- Fixed Divxstage
+- Fixed Ecostream
+- Fixed HostingBulk
+- Fixed Movshare
+- Fixed TheFile
+- Fixed Vidxden
+- Updated Putlocker/Firedrive to check for more variations
+- Converted URLResolver completely to use addon.common instead of t0mm0.common
+
+[B]Version 2.2.0[/B]
+- Added CheeseStreams
+- Added Play44
+- Added Bestreams
+- Added FireDrive (renamed Putlocker)
+- Added UploadCrazy
+- Added VidCrazy
+- Added Video44
+- Added VideoFun
+- Added ViUp
+- Added VidZur
+- Added YourUpload
+- Fixed BillionUploads
+- Fixed Divxstage
+- Fixed Ecostream
+- Fixed HugeFiles
+- Fixed Movzap
+- Fixed NowVideo
+- Fixed ShareSix
+- Fixed YouWatch
+- Updated Real-Debrid login methods
+- Updated Vidhog for no wait time
+
+[B]Version 2.1.2[/B]
+- Vidxden bugfix
+
+[B]Version 2.1.1[/B]
+- New unwise class for new unpacking method some sites are now using
+- Added VideoTanker
+- Added NowVideo
+- Added CastAmp - live streaming
+- Updated Divxstage
+- Updated Ecostream
+- Updated Flashx
+- Updated Movshare
+- Updated Novamov
+- Updated Realdebrid
+- Updated Sharesix
+- Updated Tunepk
+- Updated Videoweed
+- Updated BillionUploads
+- Updated premiumize.me - check on if login exists
+- Updated rpnet - check if login exists
+
+[B]Version 2.1.0[/B]
+- New unresolvable() class for resolvers to return in case of an error, specify why it failed for addon to handle
+- New redx.png graphic file for reporting issues in resolvers
+- Updated all resolvers to display small box on exceptions
+- Added DoneVideo
+- Added EntroUpload
+- Added LimeVideo
+- Added MuchShare
+- Added PureVid
+- Added VideoZed
+- Added VidTo
+- Added YouWatch
+- Added LemUploads
+- Added MegaRelease
+- Added NosVideo
+- Added Vidto
+- Added MightyUpload
+- Added PrimeShare
+- Added Vidplay
+- Updated AllDebrid
+- Fixed RealDebrid
+- Fixed BillionUploads
+- Fixed 180Upload
+- Fixed HostingBulk
+- Fixed Ecostream
+- Fixed FlashX
+- Fixed DaClips
+
 [B]Version 2.0.9[/B]
 - Fixed VeeHD
 

@@ -22,12 +22,17 @@ Site: http://www.movshare.net
 movshare hosts both avi and flv videos
 """
 
-import re
+import re, urllib2, os
 from t0mm0.common.net import Net
-import urllib2
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
+from urlresolver import common
+from lib import unwise
+from lib import jsunpack
+
+#SET ERROR_LOGO# THANKS TO VOINAGE, BSTRDMKR, ELDORADO
+error_logo = os.path.join(common.addon_path, 'resources', 'images', 'redx.png')
 
 class MovshareResolver(Plugin, UrlResolver, PluginSettings):
     implements = [UrlResolver, PluginSettings]
@@ -37,7 +42,6 @@ class MovshareResolver(Plugin, UrlResolver, PluginSettings):
         p = self.get_setting('priority') or 100
         self.priority = int(p)
         self.net = Net()
-        
 
     def get_media_url(self, host, media_id):
         web_url = self.get_url(host, media_id)
@@ -45,42 +49,47 @@ class MovshareResolver(Plugin, UrlResolver, PluginSettings):
         try:
             self.net.http_HEAD(web_url)
             html = self.net.http_GET(web_url).content
-        except urllib2.URLError, e:
-            common.addon.log_error('movshare: got http error %d fetching %s' %
-                                  (e.code, web_url))
-            return False
-               
-        """movshare can do both flv and avi. There is no way I know before hand
-        if the url going to be a flv or avi. So the first regex tries to find 
-        the avi file, if nothing is present, it will check for the flv file.
-        "param name="src" is for avi
-        "flashvars.file=" is for flv
-        """
-        r = re.search('<param name="src" value="(.+?)"', html)
-        if not r:
-            r = re.search('flashvars.file="(.+?)"', html)
-        if r:
-            stream_url = r.group(1)
-        else:
-            common.addon.log_error('movshare: stream url not found')
-            return False
-                                    
-        return stream_url
-        
+            """movshare can do both flv and avi. There is no way I know before hand
+            if the url going to be a flv or avi. So the first regex tries to find 
+            the avi file, if nothing is present, it will check for the flv file.
+            "param name="src" is for avi
+            "flashvars.file=" is for flv
+            """
+            r = re.search('<param name="src" value="(.+?)"', html)
+            if not r:
+                filekey = re.search('flashvars.filekey="(.+?)";', html).group(0)
+
+                #get stream url from api
+                api = 'http://www.movshare.net/api/player.api.php?key=%s&file=%s' % (filekey, media_id)
+                html = self.net.http_GET(api).content
+                r = re.search('url=(.+?)&title', html)
+            if r:
+                stream_url = r.group(1)
+            else:
+                raise Exception ('File Not Found or removed')
+            
+            return stream_url
+        except urllib2.HTTPError, e:
+            common.addon.log_error(self.name + ': got http error %d fetching %s' %
+                                   (e.code, web_url))
+            common.addon.show_small_popup('Error','Http error: '+str(e), 5000, error_logo)
+            return self.unresolvable(code=3, msg=e)
+        except Exception, e:
+            common.addon.log_error('**** Movshare Error occured: %s' % e)
+            common.addon.show_small_popup(title='[B][COLOR white]MOVSHARE[/COLOR][/B]', msg='[COLOR red]%s[/COLOR]' % e, delay=5000, image=error_logo)
+            return self.unresolvable(code=0, msg=e)
 
     def get_url(self, host, media_id):
         return 'http://www.movshare.net/video/%s' % media_id
-        
-        
+
     def get_host_and_id(self, url):
-        r = re.search('//(.+?)/video/([0-9a-z]+)', url)
+        r = re.search('//(.+?)/(?:video|embed)/([0-9a-z]+)', url)
         if r:
             return r.groups()
         else:
             return False
 
-
     def valid_url(self, url, host):
         if self.get_setting('enabled') == 'false': return False
-        return re.match('http://(?:www.)?movshare.net/video/',
+        return re.match('http://(?:www.)?movshare.net/(?:video|embed)/',
                         url) or 'movshare' in host

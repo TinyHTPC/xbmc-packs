@@ -13,7 +13,7 @@ if [ "$RESTART_ON_RESUME" == "true" ] ; then
     hibernate|suspend)
       if [ ! -z "`ps | grep -E 'python.*service.downloadmanager.InternetPVR' | awk '{print $1}'`" ] ; then
         progress "Shutting down InternetPVR for suspending..."
-        InternetPVR.stop
+        InternetPVR.stop.py
         touch $LOCKFILE
       fi
       ;;
@@ -22,7 +22,7 @@ if [ "$RESTART_ON_RESUME" == "true" ] ; then
       progress "Restarting InternetPVR for wakeup..."
       if [ -f "$LOCKFILE" ] ; then
         rm -rf "$LOCKFILE"
-        python $HOME/.xbmc/addons/service.downloadmanager.InternetPVR/bin/InternetPVR.py
+        python $HOME/.xbmc/addons/service.downloadmanager.InternetPVR/resources/InternetPVR.py
       fi
       ;;
     *) exit $NA

@@ -34,8 +34,8 @@ from thetvdbapi import TheTVDB
 import xbmc
 import xbmcvfs
 
-''' Use t0mm0's common library for http calls '''
-from t0mm0.common.net import Net
+''' Use addon.common library for http calls '''
+from addon.common.net import Net
 net = Net()
 
 sys.path.append((os.path.split(common.addon_path))[0])
@@ -68,7 +68,10 @@ except:
 def make_dir(mypath, dirname):
     ''' Creates sub-directories if they are not found. '''
     subpath = os.path.join(mypath, dirname)
-    if not xbmcvfs.exists(subpath): xbmcvfs.mkdirs(subpath)
+    try:
+        if not xbmcvfs.exists(subpath): xbmcvfs.mkdirs(subpath)
+    except:
+        if not os.path.exists(subpath): os.makedirs(subpath)              
     return subpath
 
 
@@ -90,15 +93,19 @@ class MetaData:
     '''  
 
      
-    def __init__(self, path='special://profile/addon_data/script.module.metahandler/', preparezip=False):
+    def __init__(self, preparezip=False, tmdb_api_key='af95ef8a4fe1e697f86b8c194f2e5e11'):
 
         #Check if a path has been set in the addon settings
         settings_path = common.addon.get_setting('meta_folder_location')
         
+        # TMDB constants
+        self.tmdb_image_url = ''
+        self.tmdb_api_key = tmdb_api_key
+               
         if settings_path:
             self.path = xbmc.translatePath(settings_path)
         else:
-            self.path = xbmc.translatePath(path)
+            self.path = common.profile_path();
         
         self.cache_path = make_dir(self.path, 'meta_cache')
 
@@ -142,67 +149,81 @@ class MetaData:
             db_user = common.addon.get_setting('db_user')
             db_pass = common.addon.get_setting('db_pass')
             db_name = common.addon.get_setting('db_name')
-            self.dbcon = database.connect(db_name, db_user, db_pass, db_address, buffered=True)
+            self.dbcon = database.connect(database=db_name, user=db_user, password=db_pass, host=db_address, buffered=True)
             self.dbcur = self.dbcon.cursor(cursor_class=MySQLCursorDict, buffered=True)
         else:
             self.dbcon = database.connect(self.videocache)
             self.dbcon.row_factory = database.Row # return results indexed by field names and not numbers so we can convert to dict
             self.dbcur = self.dbcon.cursor()
 
-
-        # !!!!!!!! TEMPORARY CODE !!!!!!!!!!!!!!!
-        if xbmcvfs.exists(self.videocache):
-            table_exists = True
-            try:
-                sql_select = 'select * from tvshow_meta'
-                self.dbcur.execute(sql_select)
-                matchedrow = self.dbcur.fetchall()[0]
-            except:
-                table_exists = False
-
-            if table_exists:
-                sql_select = 'SELECT year FROM tvshow_meta'
-                if DB == 'mysql':
-                    sql_alter = 'RENAME TABLE tvshow_meta TO tmp_tvshow_meta'
-                else:
-                    sql_alter = 'ALTER TABLE tvshow_meta RENAME TO tmp_tvshow_meta'
-                try:
-                    self.dbcur.execute(sql_select)
-                    matchedrow = self.dbcur.fetchall()[0]
-                except Exception, e:
-                    print '************* tvshow year column does not exist - creating temp table'
-                    print e
-                    self.dbcur.execute(sql_alter)
-                    self.dbcon.commit()
-    
-        ## !!!!!!!!!!!!!!!!!!!!!!!
-
-
         # initialize cache db
         self._cache_create_movie_db()
+        
+        # Check TMDB configuration, update if necessary
+        self._set_tmdb_config()
 
-        
-        # !!!!!!!! TEMPORARY CODE !!!!!!!!!!!!!!!
-        
-        if DB == 'mysql':
-            sql_insert = "INSERT INTO tvshow_meta (imdb_id, tvdb_id, title, year, cast, rating, duration, plot, mpaa, premiered, genre, studio, status, banner_url, cover_url, trailer_url, backdrop_url, imgs_prepacked, overlay) SELECT imdb_id, tvdb_id, title, cast(substr(premiered, 1,4) as unsigned) as year, cast, rating, duration, plot, mpaa, premiered, genre, studio, status, banner_url, cover_url, trailer_url, backdrop_url, imgs_prepacked, overlay FROM tmp_tvshow_meta"
-        else:
-            sql_insert = "INSERT INTO tvshow_meta (imdb_id, tvdb_id, title, year, cast, rating, duration, plot, mpaa, premiered, genre, studio, status, banner_url, cover_url, trailer_url, backdrop_url, imgs_prepacked, overlay) SELECT imdb_id, tvdb_id, title, cast(substr(premiered, 1,4) as integer) as year, [cast], rating, duration, plot, mpaa, premiered, genre, studio, status, banner_url, cover_url, trailer_url, backdrop_url, imgs_prepacked, overlay FROM tmp_tvshow_meta"
-        sql_select = 'SELECT imdb_id from tmp_tvshow_meta'
-        sql_drop = 'DROP TABLE tmp_tvshow_meta'
+        ## !!!!!!!!!!!!!!!!!! Temporary code to update movie_meta columns cover_url and backdrop_url to store only filename !!!!!!!!!!!!!!!!!!!!!
+ 
+        ## We have matches with outdated url, so lets strip the url out and only keep filename 
         try:
-            self.dbcur.execute(sql_select)
-            matchedrow = self.dbcur.fetchall()[0]
-            self.dbcur.execute(sql_insert)
-            self.dbcon.commit()
-            self.dbcur.execute(sql_drop)
-            self.dbcon.commit()
+
+            if DB == 'mysql':
+                sql_select = "SELECT imdb_id, tmdb_id, cover_url, backdrop_url "\
+                                "FROM movie_meta "\
+                                "WHERE (substring(cover_url, 1, 36 ) = 'http://d3gtl9l2a4fn1j.cloudfront.net' "\
+                                "OR substring(backdrop_url, 1, 36 ) = 'http://d3gtl9l2a4fn1j.cloudfront.net')"
+                self.dbcur.execute(sql_select)
+                matchedrows = self.dbcur.fetchall()[0]
+                
+                if matchedrows:
+                    sql_update = "UPDATE movie_meta "\
+                                    "SET cover_url = SUBSTRING_INDEX(cover_url, '/', -1), "\
+                                    "backdrop_url = SUBSTRING_INDEX(backdrop_url, '/', -1) "\
+                                    "where substring(cover_url, 1, 36 ) = 'http://d3gtl9l2a4fn1j.cloudfront.net' "\
+                                    "or substring(backdrop_url, 1, 36 ) = 'http://d3gtl9l2a4fn1j.cloudfront.net'"
+                    self.dbcur.execute(sql_update)
+                    self.dbcon.commit()
+                    common.addon.log('MySQL rows successfully updated')
+
+                else:
+                    common.addon.log('No MySQL rows requiring update')                    
+                
+            else:
+          
+                sql_select = "SELECT imdb_id, tmdb_id, cover_url, thumb_url, backdrop_url "\
+                                "FROM movie_meta "\
+                                "WHERE substr(cover_url, 1, 36 ) = 'http://d3gtl9l2a4fn1j.cloudfront.net' "\
+                                "OR substr(thumb_url, 1, 36 ) = 'http://d3gtl9l2a4fn1j.cloudfront.net' "\
+                                "OR substr(backdrop_url, 1, 36 ) = 'http://d3gtl9l2a4fn1j.cloudfront.net' "\
+                                "OR substr(cover_url, 1, 1 ) in ('w', 'o') "\
+                                "OR substr(thumb_url, 1, 1 ) in ('w', 'o') "\
+                                "OR substr(backdrop_url, 1, 1 ) in ('w', 'o') "
+                self.dbcur.execute(sql_select)
+                matchedrows = self.dbcur.fetchall()
+
+                if matchedrows:
+                    dictrows = [dict(row) for row in matchedrows]
+                    for row in dictrows:
+                        if row["cover_url"]:
+                            row["cover_url"] = '/' + row["cover_url"].split('/')[-1]
+                        if row["thumb_url"]:
+                            row["thumb_url"] = '/' + row["thumb_url"].split('/')[-1]
+                        if row["backdrop_url"]:
+                            row["backdrop_url"] = '/' + row["backdrop_url"].split('/')[-1]
+
+                    sql_update = "UPDATE movie_meta SET cover_url = :cover_url, thumb_url = :thumb_url, backdrop_url = :backdrop_url  WHERE imdb_id = :imdb_id and tmdb_id = :tmdb_id"
+                    
+                    self.dbcur.executemany(sql_update, dictrows)
+                    self.dbcon.commit()
+                    common.addon.log('SQLite rows successfully updated')
+                else:
+                    common.addon.log('No SQLite rows requiring update')                    
+           
         except Exception, e:
-            print '************* tmp_tvshow_meta does not exist: %s' % e
-
-        ## !!!!!!!!!!!!!!!!!!!!!!!
-
-
+            common.addon.log('************* Error updating cover and backdrop columns: %s' % e, 4)
+            pass
+        
+        ## !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     def __del__(self):
         ''' Cleanup db when object destroyed '''
@@ -244,6 +265,15 @@ class MetaData:
             sql_create = sql_create.replace("imdb_id TEXT","imdb_id VARCHAR(10)")
             sql_create = sql_create.replace("tmdb_id TEXT","tmdb_id VARCHAR(10)")
             sql_create = sql_create.replace("title TEXT"  ,"title VARCHAR(255)")
+
+            # hack to bypass bug in myconnpy
+            # create table if not exists fails bc a warning about the table
+            # already existing bubbles up as an exception. This suppresses the
+            # warning which would just be logged anyway.
+            # http://stackoverflow.com/questions/1650946/mysql-create-table-if-not-exists-error-1050
+            sql_hack = "SET sql_notes = 0;"
+            self.dbcur.execute(sql_hack)
+            
             self.dbcur.execute(sql_create)
             try: self.dbcur.execute('CREATE INDEX nameindex on movie_meta (title);')
             except: pass
@@ -353,6 +383,21 @@ class MetaData:
             self.dbcur.execute(sql_create)
         common.addon.log('Table addons initialized', 0)
 
+        # Create Configuration table
+        sql_create = "CREATE TABLE IF NOT EXISTS config ("\
+                           "setting TEXT, "\
+                           "value TEXT, "\
+                           "UNIQUE(setting)"\
+                           ");"
+
+        if DB == 'mysql':
+            sql_create = sql_create.replace("setting TEXT", "setting VARCHAR(255)")
+            sql_create = sql_create.replace("value TEXT", "value VARCHAR(255)")
+            self.dbcur.execute(sql_create)
+        else:
+            self.dbcur.execute(sql_create)
+        common.addon.log('Table config initialized', 0)
+        
 
     def _init_movie_meta(self, imdb_id, tmdb_id, name, year=0):
         '''
@@ -490,6 +535,22 @@ class MetaData:
         return meta
         
 
+    def __get_tmdb_language(self):
+        tmdb_language = common.addon.get_setting('tmdb_language')
+        if tmdb_language:
+            return re.sub(".*\((\w+)\).*","\\1",tmdb_language)
+        else:
+            return 'en'
+
+            
+    def __get_tvdb_language(self) :
+        tvdb_language = common.addon.get_setting('tvdb_language')
+        if tvdb_language and tvdb_language!='':
+            return re.sub(".*\((\w+)\).*","\\1",tvdb_language)
+        else:
+            return 'en'
+
+            
     def _string_compare(self, s1, s2):
         """ Method that takes two strings and returns True or False, based
             on if they are equal, regardless of case.
@@ -541,7 +602,7 @@ class MetaData:
         '''                 
 
         if not xbmcvfs.exists(path):
-            xbmcvfs.mkdirs(path)
+            make_dir(path)
         
         full_path = os.path.join(path, name)
         self._dl_code(url, full_path)              
@@ -634,6 +695,98 @@ class MetaData:
         else:
             return 0
 
+
+    def _get_config(self, setting):
+        '''
+        Query local Config table for values
+        '''
+        
+        #Query local table first for current values
+        sql_select = "SELECT * FROM config where setting = '%s'" % setting
+
+        common.addon.log('Looking up in local cache for config data: %s' % setting, 0)
+        common.addon.log('SQL Select: %s' % sql_select, 0)        
+
+        try:    
+            self.dbcur.execute(sql_select)
+            matchedrow = self.dbcur.fetchone()
+        except Exception, e:
+            common.addon.log('************* Error selecting from cache db: %s' % e, 4)
+            return None
+
+        if matchedrow:
+            common.addon.log('Found config data in cache table for setting: %s value: %s' % (setting, dict(matchedrow)), 0)
+            return dict(matchedrow)['value']
+        else:
+            common.addon.log('No match in local DB for config setting: %s' % setting, 0)
+            return None            
+            
+
+    def _set_config(self, setting, value):
+        '''
+        Set local Config table for values
+        '''
+        
+        try:
+            sql_insert = "REPLACE INTO config (setting, value) VALUES(%s,%s)"
+            if DB == 'sqlite':
+                sql_insert = 'INSERT OR ' + sql_insert.replace('%s', '?')
+
+            common.addon.log('Updating local cache for config data: %s value: %s' % (setting, value), 2)
+            common.addon.log('SQL Insert: %s' % sql_insert, 0)                 
+
+            self.dbcur.execute(sql_insert, (setting, value))
+            self.dbcon.commit()
+        except Exception, e:
+            common.addon.log('************* Error updating cache db: %s' % e, 4)
+            return None
+            
+
+    def _set_tmdb_config(self):
+        '''
+        Query config database for required TMDB config values, set constants as needed
+        Validate cache timestamp to ensure it is only refreshed once every 7 days
+        '''
+
+        common.addon.log('Looking up TMDB config cache values', 2)        
+        tmdb_image_url = self._get_config('tmdb_image_url')
+        tmdb_config_timestamp = self._get_config('tmdb_config_timestamp')
+        
+        #Grab current time in seconds            
+        now = time.time()
+        age = 0
+
+        #Cache limit is 7 days, value needs to be in seconds: 60 seconds * 60 minutes * 24 hours * 7 days
+        expire = 60 * 60 * 24 * 7
+              
+        #Check if image and timestamp values are valid
+        if tmdb_image_url and tmdb_config_timestamp:
+            created = float(tmdb_config_timestamp)
+            age = now - created
+            common.addon.log('Cache age: %s , Expire: %s' % (age, expire), 0)
+            
+            #If cache hasn't expired, set constant values
+            if age <= float(expire):
+                common.addon.log('Cache still valid, setting values', 2)
+                common.addon.log('Setting tmdb_image_url: %s' % tmdb_image_url, 0)
+                self.tmdb_image_url = tmdb_image_url
+            else:
+                common.addon.log('Cache is too old, need to request new values', 2)
+        
+        #Either we don't have the values or the cache has expired, so lets request and set them - update cache in the end
+        if (not tmdb_image_url or not tmdb_config_timestamp) or age > expire:
+            common.addon.log('No cached config data found or cache expired, requesting from TMDB', 2)
+
+            tmdb = TMDB(api_key=self.tmdb_api_key, lang=self.__get_tmdb_language())
+            config_data = tmdb.call_config()
+
+            if config_data:
+                self.tmdb_image_url = config_data['images']['base_url']
+                self._set_config('tmdb_image_url', config_data['images']['base_url'])
+                self._set_config('tmdb_config_timestamp', now)
+            else:
+                self.tmdb_image_url = tmdb_image_url
+                
 
     def check_meta_installed(self, addon_id):
         '''
@@ -807,67 +960,98 @@ class MetaData:
             DICT. Data formatted and corrected for proper return to xbmc addon
         '''      
 
-        #We want to send back the name that was passed in   
-        meta['title'] = name
-        
-        #Change cast back into a tuple
-        if meta['cast']:
-            meta['cast'] = eval(str(meta['cast']))
-            
-        #Return a trailer link that will play via youtube addon
         try:
-            trailer_id = re.match('^[^v]+v=(.{3,11}).*', meta['trailer_url']).group(1)
-            meta['trailer'] = 'plugin://plugin.video.youtube/?action=play_video&videoid=%s' % trailer_id
-        except:
-            meta['trailer'] = ''
-        
-        #Ensure we are not sending back any None values, XBMC doesn't like them
-        meta = self._remove_none_values(meta)
-        
-        #Add TVShowTitle infolabel
-        if media_type==self.type_tvshow:
-            meta['TVShowTitle'] = meta['title']
-        
-        #Set Watched flag for movies
-        if media_type==self.type_movie:
-            meta['playcount'] = self.__set_playcount(meta['overlay'])
-        
-        #if cache row says there are pre-packed images then either use them or create them
-        if meta['imgs_prepacked'] == 'true':
-
-                #define the image paths               
+            #We want to send back the name that was passed in   
+            meta['title'] = name
+            
+            #Change cast back into a tuple
+            if meta['cast']:
+                meta['cast'] = eval(str(meta['cast']))
+                
+            #Return a trailer link that will play via youtube addon
+            try:
+                meta['trailer'] = ''
+                trailer_id = ''
+                if meta['trailer_url']:
+                    r = re.match('^[^v]+v=(.{3,11}).*', meta['trailer_url'])
+                    if r:
+                        trailer_id = r.group(1)
+                    else:
+                        trailer_id = meta['trailer_url']
+                 
+                if trailer_id:
+                    meta['trailer'] = 'plugin://plugin.video.youtube/?action=play_video&videoid=%s' % trailer_id
+                    
+            except Exception, e:
+                meta['trailer'] = ''
+                common.addon.log('Failed to set trailer: %s' % e, 3)
+                pass
+    
+            #Ensure we are not sending back any None values, XBMC doesn't like them
+            meta = self._remove_none_values(meta)
+            
+            #Add TVShowTitle infolabel
+            if media_type==self.type_tvshow:
+                meta['TVShowTitle'] = meta['title']
+            
+            #Set Watched flag for movies
+            if media_type==self.type_movie:
+                meta['playcount'] = self.__set_playcount(meta['overlay'])
+            
+            #if cache row says there are pre-packed images then either use them or create them
+            if meta['imgs_prepacked'] == 'true':
+    
+                    #define the image paths               
+                    if media_type == self.type_movie:
+                        root_covers = self.mvcovers
+                        root_backdrops = self.mvbackdrops
+                    elif media_type == self.type_tvshow:
+                        root_covers = self.tvcovers
+                        root_backdrops = self.tvbackdrops
+                        root_banners = self.tvbanners
+                    
+                    if meta['cover_url']:
+                        cover_name = self._picname(meta['cover_url'])
+                        if cover_name:
+                            cover_path = os.path.join(root_covers, cover_name[0].lower())
+                            if self.classmode == 'true':
+                                self._downloadimages(meta['cover_url'], cover_path, cover_name)
+                            meta['cover_url'] = os.path.join(cover_path, cover_name)
+                    
+                    if meta['backdrop_url']:
+                        backdrop_name = self._picname(meta['backdrop_url'])
+                        if backdrop_name:
+                            backdrop_path=os.path.join(root_backdrops, backdrop_name[0].lower())
+                            if self.classmode == 'true':
+                                self._downloadimages(meta['backdrop_url'], backdrop_path, backdrop_name)
+                            meta['backdrop_url'] = os.path.join(backdrop_path, backdrop_name)
+    
+                    if meta.has_key('banner_url'):
+                        if meta['banner_url']:
+                            banner_name = self._picname(meta['banner_url'])
+                            if banner_name:
+                                banner_path=os.path.join(root_banners, banner_name[0].lower())
+                                if self.classmode == 'true':
+                                    self._downloadimages(meta['banner_url'], banner_path, banner_name)
+                                meta['banner_url'] = os.path.join(banner_path, banner_name)
+    
+            #Else - they are online so piece together the full URL from TMDB 
+            else:
                 if media_type == self.type_movie:
-                    root_covers = self.mvcovers
-                    root_backdrops = self.mvbackdrops
-                elif media_type == self.type_tvshow:
-                    root_covers = self.tvcovers
-                    root_backdrops = self.tvbackdrops
-                    root_banners = self.tvbanners
-                
-                if meta['cover_url']:
-                    cover_name = self._picname(meta['cover_url'])
-                    cover_path = os.path.join(root_covers, cover_name[0].lower())
-                    if self.classmode == 'true':
-                        self._downloadimages(meta['cover_url'], cover_path, cover_name)
-                    meta['cover_url'] = os.path.join(cover_path, cover_name)
-                
-                if meta['backdrop_url']:
-                    backdrop_name = self._picname(meta['backdrop_url'])
-                    backdrop_path=os.path.join(root_backdrops, backdrop_name[0].lower())
-                    if self.classmode == 'true':
-                        self._downloadimages(meta['backdrop_url'], backdrop_path, backdrop_name)
-                    meta['backdrop_url'] = os.path.join(backdrop_path, backdrop_name)
-
-                if meta.has_key('banner_url'):
-                    if meta['banner_url']:
-                        banner_name = self._picname(meta['banner_url'])
-                        banner_path=os.path.join(root_banners, banner_name[0].lower())
-                        if self.classmode == 'true':
-                            self._downloadimages(meta['banner_url'], banner_path, banner_name)
-                        meta['banner_url'] = os.path.join(banner_path, banner_name)        
-
-        common.addon.log('Returned Meta: %s' % meta, 0)
-        return meta  
+                    if meta['cover_url'] and len(meta['cover_url']) > 1 and not meta['cover_url'].startswith('http'):
+                        meta['cover_url'] = self.tmdb_image_url  + common.addon.get_setting('tmdb_poster_size') + meta['cover_url']
+                    else:
+                        meta['cover_url'] = ''
+                    if meta['backdrop_url'] and len(meta['backdrop_url']) > 1 and not meta['backdrop_url'].startswith('http'):
+                        meta['backdrop_url'] = self.tmdb_image_url  + common.addon.get_setting('tmdb_backdrop_size') + meta['backdrop_url']
+                    else:
+                        meta['backdrop_url'] = ''
+    
+            common.addon.log('Returned Meta: %s' % meta, 0)
+            return meta  
+        except Exception, e:
+            common.addon.log('************* Error formatting meta: %s' % e, 4)
+            return meta  
 
 
     def update_meta(self, media_type, name, imdb_id, tmdb_id='', new_imdb_id='', new_tmdb_id='', year=''):
@@ -905,7 +1089,11 @@ class MetaData:
             meta = self._cache_lookup_by_id(media_type, tmdb_id=tmdb_id)
         else:
             meta = self._cache_lookup_by_name(media_type, name, year)
-        
+            
+        #if no old meta found, the year is probably not in the database
+        if not imdb_id and not tmdb_id:
+            year = ''
+            
         if meta:
             overlay = meta['overlay']
             self._cache_delete_video_meta(media_type, imdb_id, tmdb_id, name, year)
@@ -1013,8 +1201,9 @@ class MetaData:
         common.addon.log('Looking up in local cache by name for: %s %s %s' % (media_type, name, year), 0)
         
         # movie_meta doesn't have a year column
-        if year and media_type == self.type_movie:
-            sql_select = sql_select + " AND year = %s" % year
+        if common.addon.get_setting('year_lock')=='true':
+            if year and media_type == self.type_movie:
+                sql_select = sql_select + " AND year = %s" % year
         common.addon.log('SQL Select: %s' % sql_select, 0)
         
         try:
@@ -1022,51 +1211,7 @@ class MetaData:
             matchedrow = self.dbcur.fetchone()
         except Exception, e:
             common.addon.log('************* Error selecting from cache db: %s' % e, 4)
-            pass
-            
-        if matchedrow:
-            common.addon.log('Found meta information by name in cache table: %s' % dict(matchedrow), 0)
-            return dict(matchedrow)
-        else:
-            common.addon.log('No match in local DB', 0)
             return None
-
-
-    def _cache_lookup_by_name(self, media_type, name, year=''):
-        '''
-        Lookup in SQL DB for video meta data by name and year
-        
-        Args:
-            media_type (str): 'movie' or 'tvshow'
-            name (str): full name of movie/tvshow you are searching
-        Kwargs:
-            year (str): 4 digit year of video, recommended to include the year whenever possible
-                        to maximize correct search results.
-                        
-        Returns:
-            DICT of matched meta data or None if no match.
-        '''        
-
-        name =  self._clean_string(name.lower())
-        if media_type == self.type_movie:
-            sql_select = "SELECT * FROM movie_meta WHERE title = '%s'" % name
-        elif media_type == self.type_tvshow:
-            sql_select = "SELECT a.*, CASE WHEN b.episode ISNULL THEN 0 ELSE b.episode END AS episode, CASE WHEN c.playcount ISNULL THEN 0 ELSE c.playcount END as playcount FROM tvshow_meta a LEFT JOIN (SELECT imdb_id, count(imdb_id) AS episode FROM episode_meta GROUP BY imdb_id) b ON a.imdb_id = b.imdb_id LEFT JOIN (SELECT imdb_id, count(imdb_id) AS playcount FROM episode_meta WHERE overlay=7 GROUP BY imdb_id) c ON a.imdb_id = c.imdb_id WHERE a.title = '%s'" % name
-            if DB == 'mysql':
-                sql_select = sql_select.replace("ISNULL", "IS NULL")
-        common.addon.log('Looking up in local cache by name for: %s %s %s' % (media_type, name, year), 0)
-        
-        # movie_meta doesn't have a year column
-        # if year and media_type == self.type_movie:
-            # sql_select = sql_select + " AND year = %s" % year
-        common.addon.log('SQL Select: %s' % sql_select, 0)
-        
-        try:
-            self.dbcur.execute(sql_select)            
-            matchedrow = self.dbcur.fetchone()
-        except Exception, e:
-            common.addon.log('************* Error selecting from cache db: %s' % e, 4)
-            pass
             
         if matchedrow:
             common.addon.log('Found meta information by name in cache table: %s' % dict(matchedrow), 0)
@@ -1202,8 +1347,8 @@ class MetaData:
             these "None found" entries otherwise we hit tmdb alot.
         '''        
         
-        tmdb = TMDB()        
-        meta = tmdb.tmdb_lookup(name,imdb_id,tmdb_id, year)       
+        tmdb = TMDB(api_key=self.tmdb_api_key, lang=self.__get_tmdb_language())
+        meta = tmdb.tmdb_lookup(name,imdb_id,tmdb_id, year)
         
         if meta is None:
             # create an empty dict so below will at least populate empty data for the db insert.
@@ -1249,7 +1394,7 @@ class MetaData:
             #meta['year'] = int(self._convert_date(meta['premiered'], '%Y-%m-%d', '%Y'))
             meta['year'] = int(meta['premiered'][:4])
             
-        meta['trailer_url'] = md.get('trailer', '')
+        meta['trailer_url'] = md.get('trailers', '')
         meta['genre'] = md.get('genre', '')
         
         #Get cast, director, writers
@@ -1257,19 +1402,28 @@ class MetaData:
         cast_list = md.get('cast','')
         if cast_list:
             for cast in cast_list:
-                job=cast.get('job','')
-                if job == 'Actor':
-                    meta['cast'].append((cast.get('name',''),cast.get('character','') ))
-                elif job == 'Director':
-                    meta['director'] = cast.get('name','')
+                char = cast.get('character','')
+                if not char:
+                    char = ''
+                meta['cast'].append((cast.get('name',''),char ))
+                        
+        crew_list = []
+        crew_list = md.get('crew','')
+        if crew_list:
+            for crew in crew_list:
+                job=crew.get('job','')
+                if job == 'Director':
+                    meta['director'] = crew.get('name','')
                 elif job == 'Screenplay':
                     if meta['writer']:
-                        meta['writer'] = meta['writer'] + ' / ' + cast.get('name','')
+                        meta['writer'] = meta['writer'] + ' / ' + crew.get('name','')
                     else:
-                        meta['writer'] = cast.get('name','')
+                        meta['writer'] = crew.get('name','')
                     
         genre_list = []
         genre_list = md.get('genres', '')
+        if(genre_list):
+            meta['genre'] = ''
         for genre in genre_list:
             if meta['genre'] == '':
                 meta['genre'] = genre.get('name','')
@@ -1294,6 +1448,7 @@ class MetaData:
                         pass
         
         meta['cover_url'] = md.get('cover_url', '')
+        meta['backdrop_url'] = md.get('backdrop_url', '')
         if md.has_key('posters'):
             # find first thumb poster url
             for poster in md['posters']:
@@ -1333,7 +1488,7 @@ class MetaData:
             these "None found" entries otherwise we hit tvdb alot.
         '''      
         common.addon.log('Starting TVDB Lookup', 0)
-        tvdb = TheTVDB()
+        tvdb = TheTVDB(language=self.__get_tvdb_language())
         tvdb_id = ''
         
         try:
@@ -1420,7 +1575,7 @@ class MetaData:
 
                 if meta['plot'] == 'None' or meta['plot'] == '' or meta['plot'] == 'TBD' or meta['plot'] == 'No overview found.' or meta['rating'] == 0 or meta['duration'] == 0 or meta['cover_url'] == '':
                     common.addon.log(' Some info missing in TVdb for TVshow *** '+ name + ' ***. Will search imdb for more', 0)
-                    tmdb = TMDB()
+                    tmdb = TMDB(api_key=self.tmdb_api_key, lang=self.__get_tmdb_language())
                     imdb_meta = tmdb.search_imdb(name, imdb_id)
                     if imdb_meta:
                         imdb_meta = tmdb.update_imdb_meta(meta, imdb_meta)
@@ -1437,7 +1592,7 @@ class MetaData:
 
                 return meta
             else:
-                tmdb = TMDB()
+                tmdb = TMDB(api_key=self.tmdb_api_key, lang=self.__get_tmdb_language())
                 imdb_meta = tmdb.search_imdb(name, imdb_id)
                 if imdb_meta:
                     meta = tmdb.update_imdb_meta(meta, imdb_meta)
@@ -1462,17 +1617,19 @@ class MetaData:
         ''' 
         common.addon.log('---------------------------------------------------------------------------------------', 2)
         common.addon.log('Meta data refresh - searching for movie: %s' % name, 2)
-        tmdb = TMDB()
+        tmdb = TMDB(api_key=self.tmdb_api_key, lang=self.__get_tmdb_language())
         movie_list = []
         meta = tmdb.tmdb_search(name)
         if meta:
-            for movie in meta:
-                if movie['released']:
-                    #year = self._convert_date(movie['released'], '%Y-%m-%d', '%Y')
-                    year = movie['released'][:4]
+            if meta['total_results'] == 0:
+                common.addon.log('No results found', 2)
+                return None
+            for movie in meta['results']:
+                if movie['release_date']:
+                    year = movie['release_date'][:4]
                 else:
                     year = None
-                movie_list.append({'title': movie['name'], 'imdb_id': movie['imdb_id'], 'tmdb_id': movie['id'], 'year': year})
+                movie_list.append({'title': movie['title'],'original_title': movie['original_title'], 'imdb_id': '', 'tmdb_id': movie['id'], 'year': year})
         else:
             common.addon.log('No results found', 2)
             return None
@@ -1480,7 +1637,37 @@ class MetaData:
         common.addon.log('Returning results: %s' % movie_list, 0)
         return movie_list
 
-            
+
+    def similar_movies(self, tmdb_id, page=1):
+        '''
+        Requests list of similar movies matching given tmdb id
+        
+        Args:
+            tmdb_id (str): MUST be a valid TMDB ID
+        Kwargs:
+            page (int): page number of result to fetch
+        Returns:
+            List of dicts - each movie in it's own dict with supporting info
+        ''' 
+        common.addon.log('---------------------------------------------------------------------------------------', 2)
+        common.addon.log('TMDB - requesting similar movies: %s' % tmdb_id, 2)
+        tmdb = TMDB(api_key=self.tmdb_api_key, lang=self.__get_tmdb_language())
+        movie_list = []
+        meta = tmdb.tmdb_similar_movies(tmdb_id, page)
+        if meta:
+            if meta['total_results'] == 0:
+                common.addon.log('No results found', 2)
+                return None
+            for movie in meta['results']:
+                movie_list.append(movie)
+        else:
+            common.addon.log('No results found', 2)
+            return None
+
+        common.addon.log('Returning results: %s' % movie_list, 0)
+        return movie_list
+
+
     def get_episode_meta(self, tvshowtitle, imdb_id, season, episode, air_date='', episode_title='', overlay=''):
         '''
         Requests meta data from TVDB for TV episodes, searches local cache db first.
@@ -1628,6 +1815,8 @@ class MetaData:
             sql_select = "SELECT tvdb_id FROM tvshow_meta WHERE imdb_id = '%s'" % imdb_id
         elif name:
             sql_select = "SELECT tvdb_id FROM tvshow_meta WHERE title = '%s'" % name
+        else:
+            return None
             
         common.addon.log('Retrieving TVDB ID', 0)
         common.addon.log('SQL SELECT: %s' % sql_select, 0)
@@ -1644,7 +1833,7 @@ class MetaData:
         else:
             return None
 
-
+     
     def update_episode_meta(self, name, imdb_id, season, episode, tvdb_id='', new_imdb_id='', new_tvdb_id=''):
         '''
         Updates and returns meta data for given episode, 
@@ -1692,7 +1881,7 @@ class MetaData:
         elif not new_tvdb_id:
             new_tvdb_id = tvdb_id
             
-        return self.get_episode_meta(name, imdb_id, season, episode, overlay)
+        return self.get_episode_meta(name, imdb_id, season, episode, overlay=overlay)
 
 
     def _cache_lookup_episode(self, imdb_id, tvdb_id, season, episode, air_date=''):
@@ -1806,7 +1995,7 @@ class MetaData:
         '''      
         
         meta = {}
-        tvdb = TheTVDB()
+        tvdb = TheTVDB(language=self.__get_tvdb_language())
         if air_date:
             try:
                 episode = tvdb.get_episode_by_airdate(tvdb_id, air_date)
@@ -1916,7 +2105,7 @@ class MetaData:
 
     def update_trailer(self, media_type, imdb_id, trailer, tmdb_id=''):
         '''
-        Change watched status on video
+        Change videos trailer
         
         Args:
             media_type (str): media_type of video to update, 'movie', 'tvshow' or 'episode'
@@ -1991,6 +2180,7 @@ class MetaData:
             tmp_meta['title'] = name
             tmp_meta['season']  = season
             tmp_meta['episode'] = episode
+            tmp_meta['premiered'] = air_date
             
             if not watched:
                 watched = self._get_watched_episode(tmp_meta)
@@ -2041,7 +2231,7 @@ class MetaData:
             
             #If we have an air date use that instead of season/episode #
             if air_date:
-                sql_update = sql_update + ' AND premiered = %s' % air_date
+                sql_update = sql_update + " AND premiered = '%s'" % air_date
             else:
                 sql_update = sql_update + ' AND season = %s AND episode = %s' % (season, episode)
                 
@@ -2070,6 +2260,7 @@ class MetaData:
             season (int): tv show season number    
 
         ''' 
+        sql_select = ''
         if media_type == self.type_movie:
             if imdb_id:
                 sql_select="SELECT overlay FROM movie_meta WHERE imdb_id = '%s'" % imdb_id
@@ -2103,11 +2294,17 @@ class MetaData:
 
         '''       
         if meta['imdb_id']:
-            sql_select = 'SELECT * FROM episode_meta WHERE imdb_id = "%s" AND season = %s AND episode = %s and premiered = "%s"'  % (meta['imdb_id'], meta['season'], meta['episode'], meta['episode'])
+            sql_select = "SELECT * FROM episode_meta WHERE imdb_id = '%s'"  % meta['imdb_id']
         elif meta['tvdb_id']:
-            sql_select = 'SELECT * FROM episode_meta WHERE tvdb_id = "%s" AND season = %s AND episode = %s and premiered = "%s"'  % (meta['tvdb_id'], meta['season'], meta['episode'], meta['episode'])
+            sql_select = "SELECT * FROM episode_meta WHERE tvdb_id = '%s'"  % meta['tvdb_id']
         else:         
-            sql_select = 'SELECT * FROM episode_meta WHERE title = "%s" AND season = %s AND episode = %s and premiered = "%s"'  % (self._clean_string(meta['title'].lower()), meta['season'], meta['episode'], meta['episode'])
+            sql_select = "SELECT * FROM episode_meta WHERE title = '%s'"  % self._clean_string(meta['title'].lower())
+        
+        if meta['premiered']:
+            sql_select += " AND premiered = '%s'" % meta['premiered']
+        else:
+            sql_select += ' AND season = %s AND episode = %s' % (meta['season'], meta['episode'])
+            
         common.addon.log('Getting episode watched status', 0)
         common.addon.log('SQL Select: %s' % sql_select, 0)
         try:
@@ -2267,11 +2464,11 @@ class MetaData:
 
 
     def _get_season_posters(self, tvdb_id, season):
-        tvdb = TheTVDB()
+        tvdb = TheTVDB(language=self.__get_tvdb_language())
         
         try:
             images = tvdb.get_show_image_choices(tvdb_id)
-        except:
+        except Exception, e:
             common.addon.log('************* Error retreiving from thetvdb.com: %s ' % e, 4)
             images = None
             pass
@@ -2482,7 +2679,6 @@ class MetaData:
 
         placeholder= '?'
         placeholders= ', '.join(placeholder for x in batch_ids)
-        print placeholders
         
         ids = []
         if media_type == self.type_movie:
@@ -2521,7 +2717,6 @@ class MetaData:
                 return None
 
         common.addon.log( 'SQL Select: %s' % sql_select, 0)
-        print ids
 
         try:
             self.dbcur.execute(sql_select, ids)

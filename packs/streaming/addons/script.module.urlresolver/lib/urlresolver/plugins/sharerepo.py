@@ -20,11 +20,14 @@ from t0mm0.common.net import Net
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
-import re
-import urllib2, xbmcgui
 from urlresolver import common
+import re
+import urllib2
 import os
-from lib import jsunpack
+import urllib
+
+#SET ERROR_LOGO# THANKS TO VOINAGE, BSTRDMKR, ELDORADO
+error_logo = os.path.join(common.addon_path, 'resources', 'images', 'redx.png')
 
 net = Net()
 
@@ -40,46 +43,54 @@ class SharerepoResolver(Plugin, UrlResolver, PluginSettings):
 
 
     def get_media_url(self, host, media_id):
-        print 'Sharerepo: in get_media_url %s %s' % (host, media_id)
-        url = self.get_url(host, media_id)
-        html = self.net.http_GET(url).content
-        #Show dialog box so user knows something is happening
-        dialog = xbmcgui.DialogProgress()
-        dialog.create('Resolving', 'Resolving Sharerepo Link...')       
-        dialog.update(0)
-
-        op = 'download1'
-        usr_login = ''
-        postid = re.search('<input type="hidden" name="id" value="(.+?)">', html).group(1)
-        fname = re.search('<input type="hidden" name="fname" value="(.+?)">', html).group(1)
-        referer = ''
-        method_free = re.search('<input type="submit" name="method_free" value="(.+?)">', html).group(1)
-        data = {'op': op, 'usr_login': usr_login, 'id': postid, 'fname': fname, 'referer': referer, 'method_free': method_free, 'down_direct': 1}
+        try:
+            web_url = self.get_url(host, media_id)
+            headers = {
+                'Referer':web_url
+            }
             
-        print 'Sharerepo - Requesting POST URL: %s DATA: %s' % (url, data)
-        html = net.http_POST(url, data).content
+            # Get the landing page
+            html = self.net.http_GET(web_url).content
+            #print html.encode('ascii','ignore')
+            
+            data = {}
+            r = re.findall(r'type="hidden" name="(.+?)"\s* value="?(.+?)">', html)
+            for name, value in r: data[name] = value
+            data.update({'referer':web_url})
+            data.update({'method_free':'Free Download'})
+            #print data
+            
+            # get the video page
+            html = self.net.http_POST(web_url, data, headers=headers).content
+            
+            r = re.search(r'type="submit"\s*id="btn_download"',html)
+            if not r:
+                raise Exception("Video Not Found")
+            
+            data = {}
+            r = re.findall(r'type="hidden" name="(.+?)"\s* value="?(.+?)">', html)
+            for name, value in r: data[name] = value
+            data.update({'referer':web_url})
+            data.update({'method_free':'Free Download'})
+            data.update({'btn_download':'download'})
+            #print data
 
-        dialog.update(50)
-
-        sPattern = '''<div id="player_code">.*?<script type='text/javascript'>(eval.+?)</script>'''
-        r = re.search(sPattern, html, re.DOTALL + re.IGNORECASE)
-        
-        if r:
-            sJavascript = r.group(1)
-            sUnpacked = jsunpack.unpack(sJavascript)
-            sPattern  = '''("video/divx"src="|addVariable\('file',')(.+?)video[.]'''
-            r = re.search(sPattern, sUnpacked)              
-            if r:
-                link = r.group(2) + fname
-                dialog.close()
-                return link
-
-        if not link:
-            print '***** Sharerepo - Link Not Found'
-            raise Exception("Unable to resolve Sharerepo")
-        
+            # click download button
+            # using standard urlopen because t0mm0's wrappers don't seem to return until content download is complete
+            request = urllib2.Request(web_url,urllib.urlencode(data),headers=headers)            
+            response = urllib2.urlopen(request)
+            return response.geturl()
+        except urllib2.URLError, e:
+            common.addon.log_error(self.name + ': got http error %d fetching %s' %
+                                   (e.code, web_url))
+            common.addon.show_small_popup('Error','Http error: '+str(e), 8000, error_logo)
+            return self.unresolvable(code=3, msg=e)
+        except Exception, e:
+            common.addon.log('sharerepo: general error occured: %s' % e)
+            common.addon.show_small_popup(title='[B][COLOR white]SHAREREPO[/COLOR][/B]', msg='[COLOR red]%s[/COLOR]' % e, delay=5000, image=error_logo)
+            return self.unresolvable(code=0, msg=e)
+            
     def get_url(self, host, media_id):
-        print 'Sharerepo: in get_url %s %s' % (host, media_id)
         return 'http://sharerepo.com/%s' % media_id 
         
 

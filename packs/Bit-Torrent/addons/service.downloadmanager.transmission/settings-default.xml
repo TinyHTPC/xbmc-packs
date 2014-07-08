@@ -6,5 +6,5 @@
     <setting id="TRANSMISSION_SIMPLE" value="true" />
     <setting id="TRANSMISSION_DL_DIR" value="/root/Downloads/complete" />
     <setting id="TRANSMISSION_INC_DIR" value="/root/Downloads/incoming" />
-    <setting id="TRANSMISSION_WATCH_DIR" value="/root/Downloads/torrents" />
+    <setting id="TRANSMISSION_WATCH_DIR" value="/root/.xbmc/userdata/addon_data/service.downloadmanager.transmission/torrents" />
 </settings>

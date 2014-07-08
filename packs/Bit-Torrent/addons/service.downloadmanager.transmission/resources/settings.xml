@@ -17,7 +17,7 @@
 		<setting label="3110" type="lsep"/>
 		<setting id="TRANSMISSION_DL_DIR" type="folder" label="3121" value="" default="/root/Downloads/complete" />
 		<setting id="TRANSMISSION_INC_DIR" type="folder" label="3122" value="" default="/root/Downloads/incoming" />
-		<setting id="TRANSMISSION_WATCH_DIR" type="folder" label="3123" value="" default="/root/Downloads/torrents" />
+		<setting id="TRANSMISSION_WATCH_DIR" type="folder" label="3123" value="" default="/root/.xbmc/userdata/addon_data/service.downloadmanager.transmission/torrents" />
 
 		<setting type="sep" />
 		<setting label="Simple Mode uses only default Transmission settings:" type="lsep"/>

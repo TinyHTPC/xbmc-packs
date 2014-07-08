@@ -1,2 +1,0 @@
-VERSION = None
-BRANCH = 'master'

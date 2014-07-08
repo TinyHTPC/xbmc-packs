@@ -1,9 +1,0 @@
-<settings>
-    <setting id="CustomURL" value="false" />
-    <setting id="Sickbeard IP" value="localhost" />
-    <setting id="Sickbeard Password" value="" />
-    <setting id="Sickbeard Port" value="8082" />
-    <setting id="Sickbeard URL" value="http://" />
-    <setting id="Sickbeard Username" value="" />
-    <setting id="Use SSL" value="false" />
-</settings>

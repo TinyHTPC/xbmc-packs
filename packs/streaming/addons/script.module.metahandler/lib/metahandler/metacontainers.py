@@ -52,8 +52,7 @@ except:
 
 class MetaContainer:
 
-    def __init__(self, path='special://profile/addon_data/script.module.metahandler'):
-        #!!!! This must be matched to the path in meteahandler.py MetaData __init__
+    def __init__(self):
 
         #Check if a path has been set in the addon settings
         settings_path = common.addon.get_setting('meta_folder_location')
@@ -61,7 +60,7 @@ class MetaContainer:
         if settings_path:
             self.path = xbmc.translatePath(settings_path)
         else:
-            self.path = xbmc.translatePath(path)
+            self.path = xbmc.translatePath('special://profile/addon_data/script.module.metahandler')
 
         self.work_path = os.path.join(self.path, 'work')
         self.cache_path = os.path.join(self.path,  'meta_cache')
@@ -74,15 +73,7 @@ class MetaContainer:
      
         common.addon.log('---------------------------------------------------------------------------------------', 2)
         #delete and re-create work_path to ensure no previous files are left over
-        if xbmcvfs.exists(self.work_path):
-            import shutil
-            try:
-                common.addon.log('Removing previous work folder: %s' % self.work_path, 2)
-                # shutil.rmtree(self.work_path)
-                xbmcvfs.rmdir(self.work_path)
-            except Exception, e:
-                common.addon.log('Failed to delete work folder: %s' % e, 4)
-                pass
+        self._del_path(self.work_path)
         
         #Re-Create work folder
         self.make_dir(self.work_path)
@@ -98,41 +89,34 @@ class MetaContainer:
 
     def make_dir(self, mypath):
         ''' Creates sub-directories if they are not found. '''
-        if not xbmcvfs.exists(mypath): xbmcvfs.mkdirs(mypath)   
-
-
-    def _del_metadir(self, path=''):
-
-        if path:
-            cache_path = path
-        else:
-            catch_path = self.cache_path
-      
-        #Nuke the old meta_caches folder (if it exists) and install this meta_caches folder.
-        #Will only ever delete a meta_caches folder, so is farly safe (won't delete anything it is fed)
-
-        if xbmcvfs.exists(catch_path):
-                try:
-                    shutil.rmtree(catch_path)
-                except:
-                    common.addon.log('Failed to delete old meta', 4)
-                    return False
-                else:
-                    common.addon.log('deleted old meta', 0)
-                    return True
+        try:
+            if not xbmcvfs.exists(mypath): xbmcvfs.mkdirs(mypath)
+        except:
+            if not os.path.exists(mypath): os.makedirs(mypath)  
 
 
     def _del_path(self, path):
 
         if xbmcvfs.exists(path):
+            try:
+                common.addon.log('Removing folder: %s' % path, 2)
                 try:
-                    shutil.rmtree(path)
-                except:
-                    common.addon.log('Failed to delete old meta', 4)
-                    return False
-                else:
-                    common.addon.log('deleted old meta', 0)
-                    return True
+                    dirs, files = xbmcvfs.listdir(path)
+                    for file in files:
+                        xbmcvfs.delete(os.path.join(path, file))
+                    success = xbmcvfs.rmdir(path)
+                    if success == 0:
+                        raise
+                except Exception, e:
+                    try:
+                        common.addon.log('Failed to delete path using xbmcvfs: %s' % e, 4)
+                        common.addon.log('Attempting to remove with shutil: %s' % path, 2)
+                        shutil.rmtree(path)
+                    except:
+                        raise
+            except Exception, e:
+                common.addon.log('Failed to delete path: %s' % e, 4)
+                return False
 
 
     def _extract_zip(self, src, dest):

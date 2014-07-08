@@ -20,12 +20,12 @@ from t0mm0.common.net import Net
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
-import urllib2
+import urllib2, re, os
 from urlresolver import common
 from lib import jsunpack
 
-# Custom imports
-import re
+#SET ERROR_LOGO# THANKS TO VOINAGE, BSTRDMKR, ELDORADO
+error_logo = os.path.join(common.addon_path, 'resources', 'images', 'redx.png')
 
 
 class ZalaaResolver(Plugin, UrlResolver, PluginSettings):
@@ -46,45 +46,36 @@ class ZalaaResolver(Plugin, UrlResolver, PluginSettings):
 
         try:
             html = self.net.http_GET(web_url).content
-        except urllib2.URLError, e:
-            common.addon.log_error(self.name + ': got http error %d fetching %s' %
-                                    (e.code, web_url))
-            return False
-        r =  'method="POST"\s+name=\'frmdownload\'.+?"ipcount_val" value="'
-        r += '([0-9]+)".+?"op"\s+value="(.+?)".+?name="fname"\s+value="(.+?)"'
 
-        r = re.search(r,html,re.DOTALL)
-        ipcount_val,op,fname = r.groups()
-        data =  {'ipcount_val':ipcount_val}
-        data['op'] = op
-        data['usr_login'] = ''
-        data['id'] = media_id
-        data['fname'] = fname
-        data['referer'] = web_url
-        data['method_free'] = 'Slow access'
-
-        try:
-            html = self.net.http_POST(web_url, data).content
-        except urllib2.URLError, e:
-            common.addon.log_error(self.name + ': got http error %d fetching %s' %
-                                    (e.code, web_url))
-            return False
-        # get url from packed javascript
-        sPattern =  '<script type=(?:"|\')text/javascript(?:"|\')>(eval\('
-        sPattern += 'function\(p,a,c,k,e,d\)(?!.+player_ads.+).+np_vid.+?)'
-        sPattern += '\s+?</script>'
-        r = re.search(sPattern, html, re.DOTALL + re.IGNORECASE)
-        if r:
-            sJavascript = r.group(1)
-            sUnpacked = jsunpack.unpack(sJavascript)
-            print(sUnpacked)
-            sPattern  = '<embed id="np_vid"type="video/divx"src="(.+?)'
-            sPattern += '"custommode='
-            r = re.search(sPattern, sUnpacked)
+            #send all form values
+            sPattern = '<input.*?name="([^"]+)".*?value=([^>]+)>'
+            r = re.findall(sPattern, html)
+            data = {}
             if r:
-                return r.group(1)
+                for match in r:
+                    name = match[0]
+                    value = match[1].replace('"','')
+                    data[name] = value
 
-        return False
+                html = self.net.http_POST(web_url, data).content
+            else:
+                raise Exception ('File Not Found or removed')
+
+            # modified by mscreations. get the file url from the returned javascript
+            match = re.search("addVariable[(]'file','(.+?)'[)]", html, re.DOTALL + re.IGNORECASE)
+            if match:
+                return match.group(1)+'|Referer=http%3A%2F%2Fwww.zalaa.com%2Fplayer%2Fplayer-embed.swf'
+
+            raise Exception ('File Not Found or removed')
+        except urllib2.URLError, e:
+            common.addon.log_error(self.name + ': got http error %d fetching %s' %
+                                   (e.code, web_url))
+            common.addon.show_small_popup('Error','Http error: '+str(e), 8000, error_logo)
+            return self.unresolvable(code=3, msg=e)
+        except Exception, e:
+            common.addon.log('**** Zalaa Error occured: %s' % e)
+            common.addon.show_small_popup(title='[B][COLOR white]ZALAA[/COLOR][/B]', msg='[COLOR red]%s[/COLOR]' % e, delay=5000, image=error_logo)
+            return self.unresolvable(code=0, msg=e)
 
     def get_url(self, host, media_id):
             return 'http://www.zalaa.com/%s' % (media_id)

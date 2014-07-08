@@ -1,39 +1,46 @@
-1.0.10
-- Bug fix - was not creating userdata folder for settings.
+[B][COLOR=FF56ADDA]1.1.1 - 08JUL14[/COLOR][/B]
+• Fix simple mode settings for CouchPotato
 
-1.0.9
-- Bug fixes.
+[B][COLOR=FF56ADDA]1.1.0 - 04JUL14[/COLOR][/B]
+• Merge updates from lsellens' SickPotatoHead v1.3.7:
+   - Switching SickBeard to mr-orange branch-09ddc02
+   - update to CouchPotatoServer-b45307e
+   - update to HeadPhones-88af845
+• Recompiled arm libs for ARMv7l hard-float
 
-1.0.8
-- Fixed bug causing CP, SB and HP do not shutdown when addon was disabled.
-- Added check for removal of external device while CP, SB and HP are running.
+[B][COLOR=FF56ADDA]1.0.9[/COLOR][/B]
+• Bug fixes.
 
-1.0.7
-- Fix - Force start to check that folders are present before starting SB, CP or HP. If not, give the option to not start the services during this session.
-- Fix - Adjusted time for Transmission restart
+[B][COLOR=FF56ADDA]1.0.8[/COLOR][/B]
+• Fixed bug causing CP, SB and HP do not shutdown when addon was disabled.
+• Added check for removal of external device while CP, SB and HP are running.
 
-1.0.6
-- Added option for simple mode in settings.
+[B][COLOR=FF56ADDA]1.0.7[/COLOR][/B]
+• Fix - Force start to check that folders are present before starting SB, CP or HP. If not, give the option to not start the services during this session.
+• Fix - Adjusted time for Transmission restart
 
-1.0.5
-- Added settings for Transmission download location.
+[B][COLOR=FF56ADDA]1.0.6[/COLOR][/B]
+• Added option for simple mode in settings.
 
-1.0.4
-- Updated CouchPotato to-b69f8b7
-- Fixed folder locations.
-- Added default media locations.
-- Fixed default settings for SB, CP and HP.
+[B][COLOR=FF56ADDA]1.0.5[/COLOR][/B]
+• Added settings for Transmission download location.
 
-1.0.3
-- Made changes to description and settings menu.
+[B][COLOR=FF56ADDA]1.0.4[/COLOR][/B]
+• Updated CouchPotato to-b69f8b7
+• Fixed folder locations.
+• Added default media locations.
+• Fixed default settings for SB, CP and HP.
 
-1.0.2
-- Updated CouchPotato to-36782768a4a4018964c20d6b8d8bfa8e4c0018d2
-- Updated SickBeard to-092c0e76b56a8b97ceadc1635632dcbdd3b7d60c
+[B][COLOR=FF56ADDA]1.0.3[/COLOR][/B]
+• Made changes to description and settings menu.
 
-1.0.1
-- Made changes to run add-on on generic linux OS.
-- Fixed bug causing start script to fail to import configobj.
+[B][COLOR=FF56ADDA]1.0.2[/COLOR][/B]
+• Updated CouchPotato to-36782768a4a4018964c20d6b8d8bfa8e4c0018d2
+• Updated SickBeard to-092c0e76b56a8b97ceadc1635632dcbdd3b7d60c
 
-1.0.0
-- initial version forked from SickPotatoHead-1.2.9
+[B][COLOR=FF56ADDA]1.0.1[/COLOR][/B]
+• Made changes to run add-on on generic linux OS.
+• Fixed bug causing start script to fail to import configobj.
+
+[B][COLOR=FF56ADDA]1.0.0[/COLOR][/B]
+• initial version forked from SickPotatoHead-1.2.9

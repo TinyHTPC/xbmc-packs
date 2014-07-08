@@ -1,33 +1,37 @@
-1.0.10
-- Bug fix - was not creating userdata folder for settings.
+[B][COLOR=FF56ADDA]1.0.11[/COLOR][/B]
+• Recompile Transmission armhf
+• Change default location of .torrent files
 
-1.0.9
-- Bug fixes.
+[B][COLOR=FF56ADDA]1.0.10[/COLOR][/B]
+• Bug fix - was not creating userdata folder for settings.
 
-1.0.8
-- Fix - Force start to check that donwloads folders are present before starting Transmission. If not, give the option to disable transmission during this session.
-- Fix - Added simple mode to Transmission start to allow certain settings to be kept on reboot.
+[B][COLOR=FF56ADDA]1.0.9[/COLOR][/B]
+• Bug fixes.
 
-1.0.7
-- Added script to remove finished torrents on Transmission start.
+[B][COLOR=FF56ADDA]1.0.8[/COLOR][/B]
+• Fix - Force start to check that donwloads folders are present before starting Transmission. If not, give the option to disable transmission during this session.
+• Fix - Added simple mode to Transmission start to allow certain settings to be kept on reboot.
 
-1.0.6
-- Fixed error with file locations.
+[B][COLOR=FF56ADDA]1.0.7[/COLOR][/B]
+• Added script to remove finished torrents on Transmission start.
 
-1.0.5
-- Initial Release.
-- Added add-on description.
+[B][COLOR=FF56ADDA]1.0.6[/COLOR][/B]
+• Fixed error with file locations.
 
-1.0.4
-- Fix bugs and start script errors preventing Transmission service to start.
+[B][COLOR=FF56ADDA]1.0.5[/COLOR][/B]
+• Initial Release.
+• Added add-on description.
 
-1.0.3
-- Prepare for release
+[B][COLOR=FF56ADDA]1.0.4[/COLOR][/B]
+• Fix bugs and start script errors preventing Transmission service to start.
 
-1.0.2
-- Recompiled transmission-2.82.
-- Changed default locations.
-- Added GPL Licence.
+[B][COLOR=FF56ADDA]1.0.3[/COLOR][/B]
+• Prepare for release
 
-1.0.0
-- Initial version transmission-2.82
+[B][COLOR=FF56ADDA]1.0.2[/COLOR][/B]
+• Recompiled transmission-2.82.
+• Changed default locations.
+• Added GPL Licence.
+
+[B][COLOR=FF56ADDA]1.0.0[/COLOR][/B]
+• Initial version transmission-2.82

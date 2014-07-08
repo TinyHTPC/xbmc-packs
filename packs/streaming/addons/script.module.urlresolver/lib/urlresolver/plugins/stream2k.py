@@ -20,10 +20,13 @@ from t0mm0.common.net import Net
 from urlresolver.plugnplay.interfaces import UrlResolver
 from urlresolver.plugnplay.interfaces import PluginSettings
 from urlresolver.plugnplay import Plugin
-import re
+import re, os
 import random
 import urllib2
 from urlresolver import common
+
+#SET ERROR_LOGO# THANKS TO VOINAGE, BSTRDMKR, ELDORADO
+error_logo = os.path.join(common.addon_path, 'resources', 'images', 'redx.png')
 
 class Stream2kResolver(Plugin, UrlResolver, PluginSettings):
     implements = [UrlResolver, PluginSettings]
@@ -39,21 +42,26 @@ class Stream2kResolver(Plugin, UrlResolver, PluginSettings):
        
     def get_media_url(self, host, media_id):
         web_url = self.get_url(host, media_id)
-        print web_url
         try:
             html = self.net.http_GET(web_url,{'referer': web_url}).content
+            if host.find('embed')>0: sPattern = "file=(.+?)&"
+            else: sPattern = "<file>(.*?)</file>"
+
+            # get stream url
+            r = re.search(sPattern, html, re.DOTALL + re.IGNORECASE)
+            if r:
+                return r.group(1)
+
+            raise Exception ('File Not Found or removed')
         except urllib2.URLError, e:
             common.addon.log_error(self.name + ': got http error %d fetching %s' %
-                                    (e.code, web_url))
-        if host.find('embed')>0: sPattern = "file=(.+?)&"
-        else: sPattern = "<file>(.*?)</file>"
-
-        # get stream url
-        r = re.search(sPattern, html, re.DOTALL + re.IGNORECASE)
-        if r:
-             return r.group(1)
-
-        return False
+                                   (e.code, web_url))
+            common.addon.show_small_popup('Error','Http error: '+str(e), 8000, error_logo)
+            return self.unresolvable(code=3, msg=e)
+        except Exception, e:
+            common.addon.log('**** stream2k Error occured: %s' % e)
+            common.addon.show_small_popup(title='[B][COLOR white]STREAM2K[/COLOR][/B]', msg='[COLOR red]%s[/COLOR]' % e, delay=5000, image=error_logo)
+            return self.unresolvable(code=0, msg=e)
 
     def get_url(self, host, media_id):
         if not host.find('embed')>0:
