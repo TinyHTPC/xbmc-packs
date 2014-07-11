@@ -1,4 +1,4 @@
-name="Internet Streaming 08-07-2014"
+name="Internet Streaming 10-07-2014"
 url="https://www.dropbox.com/s/qrc50xryopnjmpf/streaming.zip?dl=1"
 img="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/streaming/icon.png"
 fanart="https://github.com/TinyHTPC/xbmc-packs/raw/master/packs/streaming/fanart.jpg"
